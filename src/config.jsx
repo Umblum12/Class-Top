@@ -1,0 +1,1 @@
+export const API_URL = "https://clon-airbnb-api-programmingsoft.koyeb.app";
