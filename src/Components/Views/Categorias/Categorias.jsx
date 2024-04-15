@@ -286,7 +286,9 @@ function Categorias() {
                         minWidth: "250px",
                         maxHeight: "1000px",
                         height: "110%",
-                        overflow: "clip",
+                        overflow: "auto",
+                        scrollbarWidth: "thin",
+                        scrollbarColor: "rgba(155, 155, 155, 0.5) rgba(255, 255, 255, 0.2)"
                       }}
                     >
                       <ProductCarousel
@@ -301,7 +303,10 @@ function Categorias() {
                       <b>{listing.title}</b>
                     </h5>
                     <h6>{listing.name}</h6>
-                    <p>{listing.description}</p>
+                    <p  className="overflow-auto" style={{ overflow: 'scroll', height: '150px' }}>
+        {listing.description}
+      </p>
+
                     <Button
                       variant="primary"
                       onClick={() => handleProductClick(listing)}

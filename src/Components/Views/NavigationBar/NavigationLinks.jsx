@@ -11,13 +11,13 @@ const NavigationLinks = () => {
             >
                 <span>
                     <img
-                        src="https://i.ibb.co/Dr08YRc/Estancias.png"
+                        src="/"
                         alt=""
                         width="20"
                         height="25"
                     />
                 </span>{" "}
-                Estancias
+                Home
             </Nav.Link>
 
             <Nav.Link
