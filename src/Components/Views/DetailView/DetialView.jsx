@@ -15,6 +15,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { getCookie } from "../../../utils/cookieUtils";
 import axios from "axios";
 import { API_URL } from "../../../config";
+
+const DEFAULT_IMAGE_URL = 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg';
+
 const DetailView = () => {
   const [product, setProduct] = useState(null);
   const [isFixed, setIsFixed] = useState(false);
@@ -56,6 +59,25 @@ const DetailView = () => {
     fetchUserData(); // Always fetch user data when component mounts or product changes
   }, [product]);
 
+
+  const getImagePerfil = (user) => {
+    const usuario = user;
+    if (usuario && usuario.isGift) {
+      if (usuario.imagePerfil && usuario.imagePerfil.imageUrl) {
+        return usuario.imagePerfil.imageUrl;
+      } else {
+        return DEFAULT_IMAGE_URL;
+      }
+    } else if (usuario && usuario.imagePerfil && usuario.imagePerfil.imageUrl) {
+      return usuario.imagePerfil.imageUrl;
+    } else {
+      return DEFAULT_IMAGE_URL;
+    }
+  };
+  
+  
+  
+
   const renderClassStatistics = () => {
     // Render class statistics if the logged-in user is the creator of the class
     if (product?.userId === userId && classStatistics) {
@@ -64,7 +86,6 @@ const DetailView = () => {
           <h4>Estadisticas</h4>
           <p>Ventas: {classStatistics.sales}</p>
           <p>Alumnos: {classStatistics.usersPurchased.join(", ")}</p>
-          { }
         </div>
       );
     }
@@ -201,20 +222,22 @@ const DetailView = () => {
           <Col md={6} className="text-center mt-5">
             {product.imageSrc.slice(0, 1).map((image, index) => (
               <div key={index + 1} className="col-6 mb-3">
-                <Image
-                  src={image.imageUrl}
-                  className="img-fluid object-cover rounded-md"
-                  alt={`Product Image ${index + 2}`}
-                  style={{
-                    width: "100%",
-                    height: "430px",
-                    marginBottom: "8px",
-                    minWidth: "600px",
-                    borderRadius: "4px",
-                    boxShadow: "0 8px 28px rgba(0,0,0,0.28)",
-                    border: "1px solid rgba(0,0,0,0.04)",
-                  }}
-                />
+                {image && image.imageUrl && ( // Verifica si image y image.imageUrl están definidos
+                  <Image
+                    src={image.imageUrl}
+                    className="img-fluid object-cover rounded-md"
+                    alt={`Product Image ${index + 2}`}
+                    style={{
+                      width: "100%",
+                      height: "430px",
+                      marginBottom: "8px",
+                      minWidth: "600px",
+                      borderRadius: "4px",
+                      boxShadow: "0 8px 28px rgba(0,0,0,0.28)",
+                      border: "1px solid rgba(0,0,0,0.04)",
+                    }}
+                  />
+                )}
               </div>
             ))}
           </Col>
@@ -226,20 +249,20 @@ const DetailView = () => {
                 index // Ajustamos el slice para tomar solo las primeras 4 imágenes
               ) => (
                 <div key={index} className="col-6 mb-3">
-                  {" "}
-                  {/* Ajustamos el key para usar solo el index */}
-                  <Image
-                    src={image.imageUrl}
-                    className="img-fluid object-cover rounded-md"
-                    alt={`Product Image ${index + 1}`} // Incrementamos index en 1 para evitar índice 0
-                    style={{
-                      width: "100%",
-                      height: "200px",
-                      borderRadius: "4px",
-                      boxShadow: "0 8px 28px rgba(0,0,0,0.28)",
-                      border: "1px solid rgba(0,0,0,0.04)",
-                    }}
-                  />
+                  {image && image.imageUrl && ( // Verifica si image y image.imageUrl están definidos
+                    <Image
+                      src={image.imageUrl}
+                      className="img-fluid object-cover rounded-md"
+                      alt={`Product Image ${index + 1}`} // Incrementamos index en 1 para evitar índice 0
+                      style={{
+                        width: "100%",
+                        height: "200px",
+                        borderRadius: "4px",
+                        boxShadow: "0 8px 28px rgba(0,0,0,0.28)",
+                        border: "1px solid rgba(0,0,0,0.04)",
+                      }}
+                    />
+                  )}
                 </div>
               )
             )}
@@ -256,7 +279,7 @@ const DetailView = () => {
                 </Card.Title>
                 <Card.Body>
                 <img
-                    src={user.imagePerfil.imageUrl}
+                    src={getImagePerfil(user) }
                     alt="Perfil de usuario"
                     style={{height: '150px', width: '150px'}}
                     className="rounded-circle mb-4 img-fluid"

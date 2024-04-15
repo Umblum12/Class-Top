@@ -47,25 +47,28 @@ const Chats = () => {
   };
 
       
-      useEffect(() => {
-        // Realizar la petición para obtener el usuario por su ID
-        axios.get(
-          `${API_URL}/usuarios/${userId}`
-        )
-          .then(response => {
-            // Obtener el nombre del usuario del objeto de respuesta
-            const usern = response.data.User;
-            const userid = response.data._id;
-            console.log(usern);
-            socket.current = io(`${API_URL}`, {
-              auth: {
-                token: token,
-                name: usern,
-                userId: userid,
-              }
-            });
-          });
-      }, []);
+  useEffect(() => {
+    axios.get(
+      `${API_URL}/usuarios`
+    )
+      .then(response => {
+        const usuariosConImagen = response.data.map(usuario => ({
+          ...usuario,
+          imagePerfil: usuario.imagePerfil ? usuario.imagePerfil.imageUrl : DEFAULT_IMAGE_URL,
+        }));
+        // Filtrar los usuarios que tienen la extensión ".gif" en la URL de la imagen del perfil
+        const usuariosGift = usuariosConImagen.filter(usuario => usuario.imagePerfil.imageUrl.endsWith(".gif"));
+        // Concatenar los usuarios gift con los otros usuarios
+        const usuariosFiltrados = usuariosGift.concat(usuariosChat);
+        // Establecer los usuarios en el estado
+        setUsuarios(usuariosFiltrados);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error al obtener usuarios:', error);
+      });
+  }, []);
+  
     
 
       useEffect(() => {
