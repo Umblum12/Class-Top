@@ -6,8 +6,8 @@ import axios from "axios";
 function Verification() {
   // Obtener el valor del parámetro de la URL (correo electrónico)
   const { email } = useParams();
-
-  // Estado para indicar si se ha verificado el correo
+  const { hola } = useParams();
+  // Estado para indicar si se ha verificado el correo gg
   const [isVerified, setIsVerified] = useState(false);
 
   // Función para manejar la verificación del correo
