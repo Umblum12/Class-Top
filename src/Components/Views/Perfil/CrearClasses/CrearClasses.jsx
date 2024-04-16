@@ -261,7 +261,7 @@ const CrearClasses = () => {
       />
       {/* Renderizar spinner de carga */}
       {isLoading && (
-        <div className="overlay">
+        <div className="overlay" style={{position: "fixed"}}>
           <Spinner className="custom-spinner" animation="border" />
         </div>
       )}

@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { getCookie } from "../../../../utils/cookieUtils";
 import { API_URL } from "../../../../config";
-const Clases = ({}) => {
+const Clases = ({ }) => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [matchingClases, setMatchingClases] = useState([]);
@@ -106,7 +106,7 @@ const Clases = ({}) => {
                   />
 
                   <Card.Body className="d-flex flex-column">
-                  <h2 className="text-xl font-bold mb-2">{clase.title}</h2>
+                    <h2 className="text-xl font-bold mb-2">{clase.title}</h2>
                     <h2 className="text-xl font-bold mb-2">{clase.date}</h2>
                     <p className="text-gray-600">{clase.detail}</p>
                     <div className="mt-auto">
@@ -117,11 +117,11 @@ const Clases = ({}) => {
                         Más detalles
                       </Button>
                       <Button
-                      className="btn btn-outline-danger mt-3"
-                      onClick={() => handleDelete(clase._id)}
-                    >
-                      Borrar clase
-                    </Button>
+                        className="btn btn-outline-danger mt-3"
+                        onClick={() => handleDelete(clase._id)}
+                      >
+                        Borrar clase
+                      </Button>
                     </div>
                   </Card.Body>
                 </Card>
@@ -131,7 +131,7 @@ const Clases = ({}) => {
         )}
 
         {isLoading && (
-          <div className="overlay">
+          <div className="overlay" style={{ position: "fixed" }}>
             <Spinner className="custom-spinner" animation="border" />
           </div>
         )}

@@ -13,7 +13,7 @@ const NavigationLinks = () => {
                     style={{ marginRight: "25px" }}
                     aria-current="page"
                 >
-                    <Link to="/">
+                    <Link to="/" style={{ color: "white" }}>
                     <span>
                         <img
                             src="https://i.ibb.co/Dr08YRc/Estancias.png"
@@ -30,32 +30,17 @@ const NavigationLinks = () => {
                     style={{ marginRight: "25px" }}
                     aria-current="page"
                 >
-                    <span>
-                        <img
-                            src="https://i.ibb.co/Ws3kmLf/Experiencias.png"
-                            alt=""
-                            width="20"
-                            height="25"
-                        />
-                    </span>{" "}
-                    Experiencias
-                </Nav.Link>
-
-                <Nav.Link
-                    className="nav-link btn btn-outline-info"
-                    href="#"
-                    tabIndex="-1"
-                    aria-disabled="true"
-                >
-                    <span>
+                    <Link to="/AboutUs" style={{ color: "white" }}>
+                    <span >
                         <img
                             src="https://i.ibb.co/XZ7yQmF/experiencias-online.png"
                             alt=""
                             width="20"
                             height="25"
                         />
-                    </span>{" "}
-                    Experiencias en línea
+                    </span >{" "}
+                        Sobre Class-Top
+                    </Link>
                 </Nav.Link>
             </Nav>
 

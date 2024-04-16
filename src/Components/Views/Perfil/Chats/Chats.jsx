@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Image, Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Card, Image, Form, Button, Container, Row, Col, Spinner } from 'react-bootstrap';
 import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBTypography, MDBTextArea, MDBBtn, MDBCardHeader, MDBIcon } from "mdb-react-ui-kit";
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import EmojiPicker from '@emoji-mart/react';
 import { Data } from 'emoji-mart';
 import Logo from "../../../../assets/Images/Logo_Class_Top.jpg";
 import { API_URL } from '../../../../config';
+
 
 const DEFAULT_IMAGE_URL = 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg';
 
@@ -25,6 +26,7 @@ const Chats = () => {
   const socket = useRef(null);
   const userId = getCookie("userId");
   const token = getCookie("token");
+  const [isLoading, setIsLoading] = useState(false);
 
   const getImagePerfil = (remitente) => {
     const usuario = usuarios.find(usuario => usuario._id === remitente);
@@ -46,30 +48,32 @@ const Chats = () => {
     return roomId;
   };
 
-      
+
   useEffect(() => {
-    axios.get(
-      `${API_URL}/usuarios`
-    )
+    setIsLoading(true); // Establecer isLoading en true antes de la solicitud
+    // Realizar la petición para obtener el usuario por su ID
+    axios.get(`${API_URL}/usuarios/${userId}`)
       .then(response => {
-        const usuariosConImagen = response.data.map(usuario => ({
-          ...usuario,
-          imagePerfil: usuario.imagePerfil ? usuario.imagePerfil.imageUrl : DEFAULT_IMAGE_URL,
-        }));
-        // Filtrar los usuarios que tienen la extensión ".gif" en la URL de la imagen del perfil
-        const usuariosGift = usuariosConImagen.filter(usuario => usuario.imagePerfil.imageUrl.endsWith(".gif"));
-        // Concatenar los usuarios gift con los otros usuarios
-        const usuariosFiltrados = usuariosGift.concat(usuariosChat);
-        // Establecer los usuarios en el estado
-        setUsuarios(usuariosFiltrados);
-        setLoading(false);
+        // Obtener el nombre del usuario del objeto de respuesta
+        const usern = response.data.User;
+        const userid = response.data._id;
+        console.log(usern);
+        socket.current = io(`${API_URL}`, {
+          auth: {
+            token: token,
+            name: usern,
+            userId: userid,
+          }
+        });
+        setIsLoading(false); // Establecer isLoading en false después de la solicitud exitosa
       })
       .catch(error => {
-        console.error('Error al obtener usuarios:', error);
+        console.error("Error al obtener los datos del usuario:", error);
+        setIsLoading(false); // Establecer isLoading en false después de la solicitud fallida
       });
   }, []);
   
-    
+
 
       useEffect(() => {
         if (socket.current) {
@@ -83,7 +87,7 @@ const Chats = () => {
               }));
             }
           });
-    
+
           socket.current.on('usuarioDesconectado', ({ userId, online }) => {
             if (usuariosChat.some(usuario => usuario._id === userId)) {
               setUsuariosChat(prevUsuarios => prevUsuarios.map(usuario => {
@@ -114,40 +118,47 @@ const Chats = () => {
             console.error('Error al obtener usuarios:', error);
           });
       }, []);
-    
+
 
       useEffect(() => {
         if (socket.current) {
           socket.current.on('mensajeserver', (message) => {
+            console.log(message);
             // Verificar si el mensaje ya existe en el estado messageThread
-            const messageExists = messageThread.some(msg => msg.contenido === message.contenido && msg.remitenteUsuario === message.remitenteUsuario && msg.destinatarioUsuario === message.destinatarioUsuario);
+            const messageExists = messageThread.find(msg => 
+              msg.contenido === message.contenido && 
+              msg.remitenteUsuario === message.remitenteUsuario && 
+              msg.destinatarioUsuario === message.destinatarioUsuario
+            );
             // Agregar el mensaje solo si no existe en el estado messageThread
             if (!messageExists) {
               setMessageThread(prevMessages => [...prevMessages, message]);
             }
           });
         }
-      }, [messageThread]); // Agregar messageThread como dependencia para que el efecto se ejecute cada vez que messageThread cambie
-     // Agregar messageThread como dependencia para que el efecto se ejecute cada vez que messageThread cambie
+      }, [messageThread]);
+      
 
      useEffect(() => {
       // Filtrar el usuario actual de la lista de usuarios del chat
       setUsuariosChat(usuarios.filter(usuario => usuario._id !== userId));
     }, [usuarios, userId]);
-  
+
     const handleEmojiSelect = (emoji) => {
       setMessageContent(prevContent => prevContent + ' ' + emoji);
     };
 
     const handleUserClick = (userId3) => {
       setSelectedUser(userId3);
+      console.log("Usuario seleccionado:", userId3);
       // Obtener el otro usuario en la conversación
       const otherUserId = userId;
       // Generar el identificador único de la sala de chat privada
       const chatRoomId1 = generateChatRoomId(userId3, otherUserId);
       setChatRoomId(chatRoomId1);
+      console.log("Identificador de la sala de chat privada:", chatRoomId1);
     };
-  
+
 
     const enviarMensaje = () => {
       if (messageContent.trim() === '' || !selectedUser) {
@@ -166,8 +177,6 @@ const Chats = () => {
       }
       setMessageContent('');
     };
-  
-
 
         useEffect(() => {
           if (selectedUser) {
@@ -188,7 +197,8 @@ const Chats = () => {
         }, [messageThread]);
 
   return (
-    <MDBContainer fluid className=" courses-container" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh", marginTop: "50px" }}>
+    <div>
+    <MDBContainer fluid className=" courses-container" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh", marginTop: "5px" }}>
           <Container style={{marginBottom: '20px'}}>
         <Card className="courses-container bg-dark text-light courses-container">
           <h1 className="text-4xl font-bold mb-6" >Chat</h1>
@@ -223,7 +233,7 @@ const Chats = () => {
                           </div>
                         </div>
                         <div className="pt-1">
-                          <p className="small text-muted mb-1">Just now</p>
+                          <p className="small text-muted mb-1">Justo Ahora</p>
                         </div>
                       </a>
                     </li>
@@ -306,7 +316,7 @@ const Chats = () => {
      
         
           ) : (
-            <div style={{ textAlign: 'center', marginTop: '5px' }}>
+            <div style={{ textAlign: 'center', marginTop: '200px' }}>
               <img
                 src={Logo}
                 alt="Logo Clon Airbnb"
@@ -319,6 +329,12 @@ const Chats = () => {
         </MDBCol>
       </MDBRow>
     </MDBContainer>
+    {isLoading && (
+      <div className="overlay" style={{ position: "fixed" }}>
+        <Spinner className="custom-spinner" animation="border" />
+      </div>
+    )}
+    </div>
   );
 };
 

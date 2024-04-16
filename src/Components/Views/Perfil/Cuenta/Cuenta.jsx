@@ -14,21 +14,27 @@ const Cuenta = () => {
   const [showUploadModal, setShowUploadModal] = useState(false); // Nuevo estado para el modal de subir imagen
   const [selectedFile, setSelectedFile] = useState(null);
   const [editedUserData, setEditedUserData] = useState(null);
-  const [selectedRole, setSelectedRole] = useState(user?.Rol || ''); 
+  const [selectedRole, setSelectedRole] = useState(user?.Rol || '');
+  const [isLoading, setIsLoading] = useState(false);
   const userId = getCookie("userId");
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
   useEffect(() => {
+    setIsLoading(true); // Establecer isLoading en true antes de la solicitud
     axios
       .get(`${API_URL}/usuarios/${userId}`)
       .then((response) => {
         setUser(response.data);
+        setIsLoading(false); // Establecer isLoading en false después de la solicitud exitosa
       })
       .catch((error) => {
         console.error("Error al obtener los datos del usuario:", error);
+        setIsLoading(false); // Establecer isLoading en false después de la solicitud fallida
       });
   }, []);
+
+
 
   const actualizarDatosUsuario = () => {
     axios
@@ -77,11 +83,11 @@ const Cuenta = () => {
     const { name, value, type } = e.target;
     // Verificar el tipo de elemento de entrada
     if (type === "text" || type === "select-one") {
-        setEditedUserData({ ...editedUserData, [name]: value });
+      setEditedUserData({ ...editedUserData, [name]: value });
     } else {
-        // Manejar otros tipos de entrada según sea necesario
+      // Manejar otros tipos de entrada según sea necesario
     }
-};
+  };
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
@@ -203,38 +209,10 @@ const Cuenta = () => {
           )}
         </div>
       </div>
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Editar datos de usuario</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formBasicUsername">
-              <Form.Label>Nombre de usuario</Form.Label>
-              <Form.Control type="text" placeholder="Enter username" name="User" defaultValue={user?.User} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" name="Mail" defaultValue={user?.Mail} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="formBasicRole">
-              <Form.Label>Rol</Form.Label>
-              <Form.Control type="text" placeholder="Enter role" name="Rol" defaultValue={user?.Rol} onChange={handleChange} />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cerrar
-          </Button>
-          <Button variant="primary" onClick={handleEditUser}>
-            Guardar cambios
-          </Button>
-        </Modal.Footer>
-      </Modal>
+   
 
 
-      <Modal show={showUploadModal} onHide={() => setShowUploadModal(false)}>
+      <Modal show={showUploadModal} onHide={() => setShowUploadModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Subir imagen</Modal.Title>
         </Modal.Header>
@@ -273,7 +251,7 @@ const Cuenta = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
+      <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Eliminar cuenta</Modal.Title>
         </Modal.Header>
@@ -290,7 +268,7 @@ const Cuenta = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Editar datos de usuario</Modal.Title>
         </Modal.Header>
@@ -328,6 +306,12 @@ const Cuenta = () => {
         </Modal.Footer>
       </Modal>
 
+
+      {isLoading && (
+        <div className="overlay" style={{ position: "fixed" }}>
+          <Spinner className="custom-spinner" animation="border" />
+        </div>
+      )}
     </div>
   );
 };
