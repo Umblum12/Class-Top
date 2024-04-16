@@ -215,6 +215,12 @@ const NavigationBar = ({ onLogout }) => {
                       <span>Perfil</span>
                     </ListItem>
                   </Link>
+                  <Link to="/CentroDeAyuda">
+                    <ListItem style={{ width: "100%", height: "auto" }}>
+                      <UserCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                      <span>Centro de ayuda</span>
+                    </ListItem>
+                  </Link>
                   {isAdminUser && ( // Render only if user is admin
                     <>
                       <Link to="/CrudAlumnos">

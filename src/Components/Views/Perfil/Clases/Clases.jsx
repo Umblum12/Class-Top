@@ -108,7 +108,9 @@ const Clases = ({ }) => {
                   <Card.Body className="d-flex flex-column">
                     <h2 className="text-xl font-bold mb-2">{clase.title}</h2>
                     <h2 className="text-xl font-bold mb-2">{clase.date}</h2>
-                    <p className="text-gray-600">{clase.detail}</p>
+                    <p className="overflow-auto" style={{ overflow: 'scroll', height: '150px' }}>
+                      {clase.detail}
+                    </p>
                     <div className="mt-auto">
                       <Button
                         variant="primary"
