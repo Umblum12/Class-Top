@@ -17,6 +17,7 @@ import AuthService from '../../Services/AuthService';
 import AuthAdmin from '../../Services/AuthAdmin';
 
 import Verification from '../Views/Verification/Verification';
+import CrudArticulos from '../Views/Perfil/CrudArticulos/CrudArticulos';
 
 const AppRoutes = () => {
   
@@ -83,6 +84,7 @@ const AppRoutes = () => {
         <Route path="/articulo/:id" element={<Articulo />} />
         <Route element={<AuthAdmin />}>
           <Route path="/CrudAlumnos" element={<CrudAlumnos />} />
+          <Route path="/CrudArticulos" element={<CrudArticulos />} />
         </Route>
       </Route>
       

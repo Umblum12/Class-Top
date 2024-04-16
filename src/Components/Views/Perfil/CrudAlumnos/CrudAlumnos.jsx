@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, Button, Form, Card, Spinner } from 'react-bootstrap';
 import { toast } from "react-toastify";
+import { API_URL } from '../../../../config';
 const CrudAlumnos = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [usuariosEditables, setUsuariosEditables] = useState([]);
@@ -13,7 +14,7 @@ const CrudAlumnos = () => {
   const obtenerUsuarios = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('https://clon-airbnb-api-programmingsoft.koyeb.app/usuarios');
+      const response = await axios.get(`${API_URL}/usuarios`);
       setUsuarios(response.data);
       setUsuariosEditables(response.data.map(usuario => ({ ...usuario })));
       setIsLoading(false);
@@ -74,9 +75,12 @@ const CrudAlumnos = () => {
 
   const handleDelete = async (userId) => {
     try {
+      setIsLoading(true);
       await axios.delete(`https://clon-airbnb-api-programmingsoft.koyeb.app/usuarios/${userId}`);
+      setIsLoading(false);
       obtenerUsuarios();
     } catch (error) {
+      setIsLoading(false);
       console.error('Error al eliminar el usuario:', error);
     }
   };
