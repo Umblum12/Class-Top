@@ -14,6 +14,7 @@ const Cuenta = () => {
   const [showUploadModal, setShowUploadModal] = useState(false); // Nuevo estado para el modal de subir imagen
   const [selectedFile, setSelectedFile] = useState(null);
   const [editedUserData, setEditedUserData] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(user?.Rol || ''); 
   const userId = getCookie("userId");
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -55,7 +56,7 @@ const Cuenta = () => {
         });
     }
   };
-  
+
   const handleDeleteAccount = () => {
     axios
       .delete(`${API_URL}/usuarios/${userId}`)
@@ -73,9 +74,14 @@ const Cuenta = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditedUserData({ ...editedUserData, [name]: value });
-  };
+    const { name, value, type } = e.target;
+    // Verificar el tipo de elemento de entrada
+    if (type === "text" || type === "select-one") {
+        setEditedUserData({ ...editedUserData, [name]: value });
+    } else {
+        // Manejar otros tipos de entrada según sea necesario
+    }
+};
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
@@ -126,7 +132,7 @@ const Cuenta = () => {
   };
 
   return (
-    <div className="courses-container mt-5">
+    <div className="courses-container" style={{ marginTop: '15vh' }}>
       <Container style={{ marginBottom: '20px' }}>
         <Card className="courses-container bg-dark text-light courses-container">
           <h1 className="mb-0">Perfil</h1>
@@ -285,34 +291,42 @@ const Cuenta = () => {
       </Modal>
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
-  <Modal.Header closeButton>
-    <Modal.Title>Editar datos de usuario</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    <Form>
-      <Form.Group controlId="formBasicUsername">
-        <Form.Label>Nombre de usuario</Form.Label>
-        <Form.Control type="text" placeholder="Enter username" name="User" defaultValue={user?.User} onChange={handleChange} />
-      </Form.Group>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Email</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" name="Mail" defaultValue={user?.Mail} onChange={handleChange} />
-      </Form.Group>
-      <Form.Group controlId="formBasicRole">
-        <Form.Label>Rol</Form.Label>
-        <Form.Control type="text" placeholder="Enter role" name="Rol" defaultValue={user?.Rol} onChange={handleChange} />
-      </Form.Group>
-    </Form>
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={() => setShowModal(false)}>
-      Cerrar
-    </Button>
-    <Button variant="primary" onClick={handleEditUser}>
-      Guardar cambios
-    </Button>
-  </Modal.Footer>
-</Modal>
+        <Modal.Header closeButton>
+          <Modal.Title>Editar datos de usuario</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formBasicUsername">
+              <Form.Label>Nombre de usuario</Form.Label>
+              <Form.Control type="text" placeholder="Enter username" name="User" defaultValue={user?.User} onChange={handleChange} />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" name="Mail" defaultValue={user?.Mail} onChange={handleChange} />
+            </Form.Group>
+            <Form.Group controlId="formBasicRole">
+              <Form.Label>Rol</Form.Label>
+              <Form.Select
+                name="Rol"
+                value={selectedRole}
+                onChange={handleChange}
+              >
+                <option value="">Seleccionar Rol</option>
+                <option value="Alumno">Alumno</option>
+                <option value="Maestro">Maestro</option>
+              </Form.Select>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cerrar
+          </Button>
+          <Button variant="primary" onClick={handleEditUser}>
+            Guardar cambios
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
     </div>
   );
