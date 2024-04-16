@@ -1,52 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Nav, Breadcrumb } from 'react-bootstrap';
-import { useLocation, Link } from "react-router-dom";
+import {  Link } from "react-router-dom";
 
 const NavigationLinks = () => {
-    const location = useLocation();
-    const [breadcrumbs, setBreadcrumbs] = useState([]);
-
-    useEffect(() => {
-        // Actualizar los breadcrumbs cuando cambia la ubicación
-        updateBreadcrumbs();
-    }, [location]);
-
-    const updateBreadcrumbs = () => {
-        // Obtener la ruta actual dividida por "/"
-        const pathSegments = location.pathname.split('/').filter(Boolean);
-        let currentPath = '';
-        const updatedBreadcrumbs = pathSegments.map((segment, index) => {
-            currentPath += `/${segment}`;
-            return (
-                <Breadcrumb.Item 
-                    key={index} 
-                    linkAs={Link} 
-                    linkProps={{ to: currentPath }} 
-                    className="btn btn-outline-info" // Aplicar clase btn-outline-info
-                    style={{ margin: "0 5px" }} // Ajustar margen
-                >
-                    {segment}
-                </Breadcrumb.Item>
-            );
-        });
-        // Agregar el breadcrumb "Home" como primer elemento
-        updatedBreadcrumbs.unshift(
-            <Breadcrumb.Item 
-                key="home" 
-                linkAs={Link} 
-                linkProps={{ to: "/" }} 
-                className="btn btn-outline-info" // Aplicar clase btn-outline-info
-                style={{ margin: "0 5px" }} // Ajustar margen
-            >
-                Home
-            </Breadcrumb.Item>
-        );
-        setBreadcrumbs(updatedBreadcrumbs);
-    };
+    
 
     return (
         <>
-            <Nav style={{ justifyContent: "center" }}> {/* Centrar elementos */}
+            <Nav > {/* Centrar elementos */}
                 <Nav.Link
                     className="nav-link btn btn-outline-info"
                     style={{ marginRight: "25px" }}
@@ -97,7 +58,7 @@ const NavigationLinks = () => {
                     Experiencias en línea
                 </Nav.Link>
             </Nav>
-            <Breadcrumb>{breadcrumbs}</Breadcrumb>
+
         </>
     );
 }

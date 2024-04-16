@@ -180,7 +180,7 @@ function Categorias() {
   const listingsChunks = chunkArray(listings, 2);
 
   return (
-    <div className="courses-container" style={{ marginTop: "125px" }}>
+    <div className="courses-container" style={{ marginTop: "10px" }}>
       <Container>
         <h1 className="text-4xl font-bold mb-6 ">Lista de clases</h1>
       </Container>

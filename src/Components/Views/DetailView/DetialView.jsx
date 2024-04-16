@@ -199,13 +199,14 @@ const DetailView = () => {
 
   return (
     <div
+    className="courses-container"
       style={{
         backgroundColor: "#f8f9fa",
         minHeight: "100vh",
-        marginTop: "200px",
+        marginTop: "5px",
       }}
     >
-      <Container className="mt-5">
+      <Container >
         <Row>
           {/* Main image on the left */}
           <Col md={6} className="text-center mt-5">

@@ -188,7 +188,7 @@ const Chats = () => {
         }, [messageThread]);
 
   return (
-    <MDBContainer fluid className=" courses-container" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh", marginTop: "150px" }}>
+    <MDBContainer fluid className=" courses-container" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh", marginTop: "50px" }}>
           <Container style={{marginBottom: '20px'}}>
         <Card className="courses-container bg-dark text-light courses-container">
           <h1 className="text-4xl font-bold mb-6" >Chat</h1>
@@ -306,7 +306,7 @@ const Chats = () => {
      
         
           ) : (
-            <div style={{ textAlign: 'center', marginTop: '200px' }}>
+            <div style={{ textAlign: 'center', marginTop: '5px' }}>
               <img
                 src={Logo}
                 alt="Logo Clon Airbnb"

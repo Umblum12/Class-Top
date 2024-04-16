@@ -1,5 +1,6 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState, useEffect }  from 'react';
+import { useLocation, Link ,BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Nav, Breadcrumb } from 'react-bootstrap';
 import Categorias from '../Views/Categorias/Categorias';
 import DetialView from '../Views/DetailView/DetialView';
 import AboutUs from '../Views/AboutUs/AboutUs';
@@ -18,7 +19,52 @@ import AuthAdmin from '../../Services/AuthAdmin';
 import Verification from '../Views/Verification/Verification';
 
 const AppRoutes = () => {
+  
+  const location = useLocation();
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
+
+  useEffect(() => {
+      // Actualizar los breadcrumbs cuando cambia la ubicación
+      updateBreadcrumbs();
+  }, [location]);
+
+  const updateBreadcrumbs = () => {
+      // Obtener la ruta actual dividida por "/"
+      const pathSegments = location.pathname.split('/').filter(Boolean);
+      let currentPath = '';
+      const updatedBreadcrumbs = pathSegments.map((segment, index) => {
+          currentPath += `/${segment}`;
+          return (
+              <Breadcrumb.Item 
+                  key={index} 
+                  linkAs={Link} 
+                  linkProps={{ to: currentPath }} 
+                  className="btn btn-outline-info" // Aplicar clase btn-outline-info
+                  style={{ margin: "0 5px" }} // Ajustar margen
+              >
+                  {segment}
+              </Breadcrumb.Item>
+          );
+      });
+      // Agregar el breadcrumb "Home" como primer elemento
+      updatedBreadcrumbs.unshift(
+          <Breadcrumb.Item 
+              key="home" 
+              linkAs={Link} 
+              linkProps={{ to: "/" }} 
+              className="btn btn-outline-info" // Aplicar clase btn-outline-info
+              style={{ margin: "0 5px" }} // Ajustar margen
+          >
+              Home
+          </Breadcrumb.Item>
+      );
+      setBreadcrumbs(updatedBreadcrumbs);
+  };
+
+
   return (
+    <>
+        <Breadcrumb style={{marginTop:'12vh'}}>{breadcrumbs}</Breadcrumb>
     <Routes>
       <Route path="/" element={<Categorias />} />
       <Route path="/Categorias" element={<Categorias />} />
@@ -39,8 +85,12 @@ const AppRoutes = () => {
           <Route path="/CrudAlumnos" element={<CrudAlumnos />} />
         </Route>
       </Route>
+      
     </Routes>
+
+    </>
   );
+  
 };
 
 export default AppRoutes;

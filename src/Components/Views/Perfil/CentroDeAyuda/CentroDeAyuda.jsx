@@ -23,7 +23,7 @@ const CentroDeAyuda = ({ }) => {
     <div style={{
       backgroundColor: "#f8f9fa",
       minHeight: "100vh",
-      marginTop: "200px"
+      marginTop: "5px"
     }}>
       <h1>Articulos más relevantes</h1>
       <p>{data.length} articulos</p>

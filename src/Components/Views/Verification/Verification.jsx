@@ -24,7 +24,7 @@ function Verification() {
   };
 
   return (
-    <Container style={{ marginTop: "125px" }}>
+    <Container style={{ marginTop: "5px" }}>
       <h1>Verificar Correo Electrónico</h1>
       <p>Correo Electrónico: {email}</p>
       {!isVerified ? (

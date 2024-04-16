@@ -30,7 +30,7 @@ const Articulo = ({ }) => {
       <div style={{
         backgroundColor: "#f8f9fa",
         minHeight: "100vh",
-        marginTop: "200px"
+        marginTop: "5px"
       }}>
         <h1>{data.title}</h1>
         <p>{formatDate(data.Date)}

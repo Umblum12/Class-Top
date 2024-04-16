@@ -95,7 +95,7 @@ const CrudAlumnos = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#f8f9fa', minHeight: '100vh', marginTop: '150px', padding: '20px' }}>
+    <div style={{ backgroundColor: '#f8f9fa', minHeight: '100vh', marginTop: '5px', padding: '20px' }}>
       <Card>
         <Card.Body>
           <Card.Title className="text-center" style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '20px' }}>

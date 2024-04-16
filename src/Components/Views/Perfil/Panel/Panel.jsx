@@ -82,7 +82,7 @@ const Panel = () => {
   }, [mostSoldClasses]);
 
   return (
-    <Container className="courses-container" style={{ minHeight: "100vh", marginTop: "150px", padding: "20px" }}>
+    <Container className="courses-container" style={{ minHeight: "100vh", marginTop: "5px", padding: "20px" }}>
       <Container style={{marginBottom: '20px'}}>
         <Card className="courses-container bg-dark text-light courses-container">
           <h1 className="text-4xl font-bold mb-6" >Panel</h1>

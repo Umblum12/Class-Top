@@ -132,7 +132,7 @@ const Cuenta = () => {
   };
 
   return (
-    <div className="courses-container" style={{ marginTop: '15vh' }}>
+    <div className="courses-container" style={{ marginTop: '5px' }}>
       <Container style={{ marginBottom: '20px' }}>
         <Card className="courses-container bg-dark text-light courses-container">
           <h1 className="mb-0">Perfil</h1>

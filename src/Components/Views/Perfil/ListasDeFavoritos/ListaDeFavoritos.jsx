@@ -59,7 +59,7 @@ const ListasDeFavoritos = () => {
       style={{
         backgroundColor: "#f8f9fa",
         minHeight: "100vh",
-        marginTop: "150px",
+        marginTop: "5px",
       }}
     >
       <Container>
