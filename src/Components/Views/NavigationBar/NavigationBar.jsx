@@ -7,7 +7,9 @@ import { useCookies } from 'react-cookie';
 import Logo from "../../../assets/Images/Logo_Class_Top.jpg";
 import NavigationLinks from "./NavigationLinks";
 import SearchMenu from "./SearchMenu";
-import { eraseCookie } from "../../../utils/cookieUtils";
+import { eraseCookie, getCookie } from "../../../utils/cookieUtils";
+import axios from "axios"; // Import axios
+import { API_URL } from "../../../config";
 
 import {
   Typography,
@@ -32,7 +34,10 @@ const NavigationBar = ({ onLogout }) => {
   const [cookies] = useCookies(['token']);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  const [profileUrl, setProfileUrl] = useState(null);
   const [isHiden, setIsHiden] = useState(false);
+
   const handleShowLoginModal = () => setShowLoginModal(true);
   const handleCloseLoginModal = () => setShowLoginModal(false);
 
@@ -45,6 +50,25 @@ const NavigationBar = ({ onLogout }) => {
     }
 
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const userId = getCookie("userId");
+      try {
+        const response = await axios.get(`${API_URL}/usuarios/${userId}`);
+        const { imagePerfil, Rol } = response.data;
+        setIsAdminUser(Rol === "admin");
+        setProfileUrl(response.data.imagePerfil.imageUrl);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setIsAdminUser(false); // Set to false in case of an error
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchData();
+    }
+  }, [isAuthenticated]);
 
   const handleLogin = (username) => {
     setLoggedInUser(username);
@@ -65,21 +89,7 @@ const NavigationBar = ({ onLogout }) => {
   };
 
   const handleClickburgir = () => {
-    if (isHiden === true) {
-      setIsHiden(false);
-    }else{
-      setIsHiden(true);
-
-    }
-  };
-
-  const SidebarWithContentSeparator = () => {
-    const [open, setOpen] = React.useState(0);
-
-    const handleOpen = (value) => {
-      setOpen(open === value ? 0 : value);
-    };
-
+    setIsHiden(!isHiden);
   };
 
   return (
@@ -126,17 +136,16 @@ const NavigationBar = ({ onLogout }) => {
               </Navbar.Collapse>
             </Container>
             <div style={{ marginRight:"5vw" }}>
-            <SearchMenu   ></SearchMenu>
+              <SearchMenu   ></SearchMenu>
             </div>
 
             <Button
-                  className="btn btn-primary "
-                  onClick={() => handleClickburgir()}
-                  style={{ marginRight:"5vw"}}
-                >
-                    <Bars4Icon className="h-5 w-5" style={{ width:"2.5vw"}} />
-                  
-                </Button>
+              className="btn btn-primary "
+              onClick={handleClickburgir}
+              style={{ marginRight:"5vw"}}
+            >
+              <Bars4Icon className="h-5 w-5" style={{ width:"2.5vw"}} />
+            </Button>
           </Navbar>
           <div className="fixed top-0 left-0 h-full w-64 bg-white shadow-md"
             style={{
@@ -157,8 +166,16 @@ const NavigationBar = ({ onLogout }) => {
             }}>
               <Card.Body style={{ width: "100%", height: "auto" }} >
                 <div className="">
+                  {profileUrl && ( // Render profile picture if available
+                    <img
+                      src={profileUrl}
+                      alt="Perfil de usuario"
+                      className="rounded-circle mb-4 img-fluid"
+                      style={{ marginBottom: '20px', height: '100px', width: '100px'}} // Add bottom margin
+                    />
+                  )}
                   <Typography variant="h5" color="blue-gray" style={{ color: "white" }}>
-                  <span>{loggedInUser}</span>
+                    <span>{loggedInUser}</span>
                   </Typography>
                 </div>
                 <List>
@@ -198,6 +215,23 @@ const NavigationBar = ({ onLogout }) => {
                       <span>Perfil</span>
                     </ListItem>
                   </Link>
+                  {isAdminUser && ( // Render only if user is admin
+                    <>
+                      <Link to="/Cuenta">
+                        <ListItem style={{ width: "100%", height: "auto" }}>
+                          <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                          <span>Admin. Alumnos</span>
+                        </ListItem>
+                      </Link>
+                      <Link to="/Cuenta">
+                        <ListItem style={{ width: "100%", height: "auto" }}>
+                          <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                          <span>Admin. Articulos</span>
+                        </ListItem>
+                      </Link>
+                    </>
+                  )}
+
                   <ListItem style={{ width: "100%", height: "auto", color: "red" }} onClick={handleLogout}>
                     <PowerIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
                     <span>Cerrar sesión</span>
