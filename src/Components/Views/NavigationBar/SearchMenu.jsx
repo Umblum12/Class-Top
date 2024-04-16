@@ -11,14 +11,6 @@ const SearchMenu = () => {
     
     const handleSearchSubmit = (event) => {
         event.preventDefault();
-        console.log(
-          "Búsqueda:",
-          searchTerm,
-          "Fecha:",
-          startDate,
-          "Page:",
-          currentPage
-        );
         // Realizar la lógica de búsqueda utilizando searchTerm, startDate y currentPage
       };
 

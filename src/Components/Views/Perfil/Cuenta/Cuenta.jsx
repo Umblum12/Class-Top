@@ -45,7 +45,7 @@ const Cuenta = () => {
       axios.patch(`${API_URL}/usuarios/${userId}`, editedUserData)
         .then((response) => {
           AlertService.success("Datos de usuario actualizados con éxito");
-          console.log("Datos de usuario actualizados:", response.data);
+
           actualizarDatosUsuario();
           setShowModal(false);
         })
@@ -62,7 +62,7 @@ const Cuenta = () => {
       .then((response) => {
         AlertService.success("Cuenta eliminada con éxito");
         eraseCookie("token");
-        console.log("Cuenta eliminada con éxito:", response.data);
+
         navigate('/'); // Redirigir al usuario a la página de inicio
         window.location.reload(); // Recargar la página
       })
@@ -94,7 +94,6 @@ const Cuenta = () => {
       .post(`${API_URL}/usuarios/upload/${userId}`, formData)
       .then((response) => {
         AlertService.success("Imagen cargada con éxito");
-        console.log("Imagen cargada con éxito:", response.data);
         actualizarDatosUsuario();
         setShowUploadModal(false);
         setSelectedFile(null);

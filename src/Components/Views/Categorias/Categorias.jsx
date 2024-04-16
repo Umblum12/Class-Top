@@ -64,7 +64,6 @@ function Categorias() {
         .get(`${API_URL}/clases`)
         .then((response) => {
           setIsLoading(false);
-          console.log(response);
           const listingsFromDB = response.data;
           setListings(listingsFromDB);
         })
@@ -88,7 +87,6 @@ function Categorias() {
 
           .then((response) => {
             setIsLoading(false);
-            console.log(response);
             const listingsFromDB = response.data;
 
             const updatedListings = listingsFromDB.map((listing) => {

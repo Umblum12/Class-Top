@@ -105,7 +105,6 @@ const DetailView = () => {
         );
 
         setIsPurchased(isPurchased);
-        console.log(isPurchased);
         // Check if the logged-in user is the creator of the class
         if (product.userId === userId) {
           // Calculate class statistics if the user is the creator
@@ -149,7 +148,6 @@ const DetailView = () => {
         // Check if cancellation was successful
         if (response.status === 200) {
           setIsPurchased(false);
-          console.log("Compra cancelada exitosamente");
           toast.success("Compra cancelada exitosamente");
   
           // Decrement sales count of the class
@@ -175,7 +173,6 @@ const DetailView = () => {
         // Check if reservation was successful
         if (response.status === 201) {
           setIsPurchased(true);
-          console.log("¡Asistencia confirmada!");
           toast.success("¡Asistencia confirmada!");
   
           // Increment sales count of the class

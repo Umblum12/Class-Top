@@ -51,7 +51,7 @@ const ModalCrearClase = ({ show, handleClose }) => {
             // Realiza la petición para subir las imágenes al servidor
             const response = await axios.post(`${API_URL}/clases/UpImg/${id}`, formData);
 
-            console.log('Respuesta del servidor:', response.data);
+
             handleClose();
         } catch (error) {
             console.error('Error al subir las imágenes:', error);
@@ -67,10 +67,10 @@ const ModalCrearClase = ({ show, handleClose }) => {
         try {
             setIsLoading(true);
             const response = await axios.post(`${API_URL}/clases`, formularioCrear);
-            console.log('Respuesta del servidor:', response.data);
+
             const claseId = response.data._id; // Obtiene el ID de la clase creada
             const titulo = response.data.title; // Obtiene el titulo de la clase creada
-            console.log('ID de la clase creada:', claseId);
+
             handleSaveImages(claseId);
             // Crear un nuevo chat de grupo asociado a la clase recién creada
             const nuevoChat = await axios.post('https://clon-airbnb-api-programmingsoft.koyeb.app/chat/grupo', {
@@ -78,7 +78,7 @@ const ModalCrearClase = ({ show, handleClose }) => {
                 nombre: nombreClase, // Utiliza el nombre de la clase como nombre del chat
             });
 
-            console.log('Chat de grupo creado:', nuevoChat.data);
+
             AlertService.success("¡Clase creada exitosamente!");
             handleClose();
             setIsLoading(false);

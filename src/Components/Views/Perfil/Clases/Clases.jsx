@@ -22,7 +22,6 @@ const Clases = ({}) => {
           (clase) => clase.userid === userId
         );
 
-        console.log(filteredClases);
         // Fetch details of each listing using listingsid
         const promises = filteredClases.map((clase) =>
           axios.get(

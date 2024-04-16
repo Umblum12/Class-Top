@@ -8,10 +8,10 @@ const ModalImages = ({ show, handleClose, saveImages   }) => {
     const handleImageUpload = () => {
         try {
             if (!selectedFiles || selectedFiles.length === 0) {
-                console.log('No hay imágenes para subir');
+
                 return;
             }
-            console.log(selectedFiles);
+
             saveImages(selectedFiles); // Llama a la función de cierre y pasa las imágenes seleccionadas
             handleClose();
         } catch (error) {

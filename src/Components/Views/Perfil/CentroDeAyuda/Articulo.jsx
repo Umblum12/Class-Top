@@ -11,7 +11,6 @@ const Articulo = ({ }) => {
       try {
         const response = await axios.get(`${API_URL}/articulo/${id}`);
         setData(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching item data:', error);
       }

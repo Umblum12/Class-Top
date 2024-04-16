@@ -53,9 +53,9 @@ const ModalEditarClase = ({ show, handleClose, registroSeleccionado, setRegistro
     try {
       await axios.patch(`${API_URL}/clases/${id}`, formularioActualizar);
       const userId = getCookie('userId');
-      console.log(userId);
+
       const response = await axios.get(`${API_URL}/clases?userId=${userId}`);
-      console.log(response.data);
+
       setRegistros(response.data);
       handleClose();
     } catch (error) {

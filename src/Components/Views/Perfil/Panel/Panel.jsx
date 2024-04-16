@@ -22,7 +22,6 @@ const Panel = () => {
       userClasses.sort((a, b) => b.sales - a.sales); // Sort classes by sales in descending order
 
       setMostSoldClasses(userClasses.slice(0, 5)); // Set the top 5 most sold classes
-      console.log(userClasses);
     } catch (error) {
       console.error("Error fetching most sold classes:", error);
     } finally {

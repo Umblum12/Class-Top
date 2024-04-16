@@ -119,7 +119,6 @@ const Chats = () => {
       useEffect(() => {
         if (socket.current) {
           socket.current.on('mensajeserver', (message) => {
-            console.log(message);
             // Verificar si el mensaje ya existe en el estado messageThread
             const messageExists = messageThread.some(msg => msg.contenido === message.contenido && msg.remitenteUsuario === message.remitenteUsuario && msg.destinatarioUsuario === message.destinatarioUsuario);
             // Agregar el mensaje solo si no existe en el estado messageThread
@@ -142,13 +141,11 @@ const Chats = () => {
 
     const handleUserClick = (userId3) => {
       setSelectedUser(userId3);
-      console.log("Usuario seleccionado:", userId3);
       // Obtener el otro usuario en la conversación
       const otherUserId = userId;
       // Generar el identificador único de la sala de chat privada
       const chatRoomId1 = generateChatRoomId(userId3, otherUserId);
       setChatRoomId(chatRoomId1);
-      console.log("Identificador de la sala de chat privada:", chatRoomId1);
     };
   
 

@@ -169,7 +169,6 @@ const Login = ({ show, handleClose, onLogin }) => {
       );
       if (response.status === 201) {
         // Registro exitoso
-        console.log("Usuario registrado con éxito.");
         AlertService.success("Registro exitoso");
 
         // Reiniciar estados y limpiar campos de entrada
@@ -210,7 +209,6 @@ const Login = ({ show, handleClose, onLogin }) => {
       await axios.post(
         `${API_URL}/usuarios/${email}`
       );
-      console.log("Correo de verificación enviado con éxito.");
       AlertService.success("Correo de verificación enviado con éxito");
     } catch (error) {
       console.error("Error al enviar correo de verificación:", error.message);
