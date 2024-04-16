@@ -9,33 +9,24 @@ import { useCookies } from 'react-cookie';
 import Logo from "../../../assets/Images/Logo_Class_Top.jpg";
 import NavigationLinks from "./NavigationLinks";
 import SearchMenu from "./SearchMenu";
-import { eraseCookie } from "../../../utils/cookieUtils";
+import { eraseCookie, getCookie } from "../../../utils/cookieUtils";
+import axios from "axios"; // Import axios
+import { API_URL } from "../../../config";
 
 import {
   Typography,
   List,
   ListItem,
-  ListItemPrefix,
-  ListItemSuffix,
-  Chip,
-  Accordion,
-  AccordionHeader,
-  AccordionBody,
 } from "@material-tailwind/react";
 import {
-  PresentationChartBarIcon,
-  ShoppingBagIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-  InboxIcon,
-  PowerIcon,
   ChatBubbleBottomCenterTextIcon,
   HeartIcon,
   PlusCircleIcon,
-  
+  PresentationChartBarIcon,
+  InboxIcon,
+  UserCircleIcon,
+  PowerIcon,
 } from "@heroicons/react/24/solid";
-import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-
 
 const NavigationBar = ({ onLogout }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -44,6 +35,7 @@ const NavigationBar = ({ onLogout }) => {
   const [cookies] = useCookies(['token']);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [isAdminUser, setIsAdminUser] = useState(false);
 
   const handleShowLoginModal = () => setShowLoginModal(true);
   const handleCloseLoginModal = () => setShowLoginModal(false);
@@ -56,6 +48,24 @@ const NavigationBar = ({ onLogout }) => {
       setIsAuthenticated(true);
     }
   }, []);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const userId = getCookie("userId");
+      try {
+        const response = await axios.get(`${API_URL}/usuarios/${userId}`);
+        const verification = response.data.Rol === "admin";
+        setIsAdminUser(verification);
+      } catch (error) {
+        console.error("Error checking admin status:", error);
+        setIsAdminUser(false); // Set to false in case of an error
+      }
+    };
+
+    if (isAuthenticated) {
+      checkAdminStatus();
+    }
+  }, [isAuthenticated]);
 
   const handleLogin = (username) => {
     setLoggedInUser(username);
@@ -74,45 +84,38 @@ const NavigationBar = ({ onLogout }) => {
     window.location.reload();
   };
 
-  const SidebarWithContentSeparator = () => {
-    const [open, setOpen] = React.useState(0);
-
-    const handleOpen = (value) => {
-      setOpen(open === value ? 0 : value);
-    };
-
-  };
-
   return (
     <div>
       {!isAuthenticated ? (
-     <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: "#2b245b" }} fixed="top" className="flex-grow-1">
-     <Container>
-       <Navbar.Brand href="/" className="p-3">
-         <img width="90" height="90" alt="Logo" src={Logo} />
-       </Navbar.Brand>
+        // Render login form if user is not authenticated
+        <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: "#2b245b" }} fixed="top" className="flex-grow-1">
+          <Container>
+            <Navbar.Brand href="/" className="p-3">
+              <img width="90" height="90" alt="Logo" src={Logo} />
+            </Navbar.Brand>
 
-       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 
-       <Navbar.Collapse id="responsive-navbar-nav">
-         <Container className="g-4">
-           <NavigationLinks />
-         </Container>
+            <Navbar.Collapse id="responsive-navbar-nav">
+              <Container className="g-4">
+                <NavigationLinks />
+              </Container>
 
-         <SearchMenu></SearchMenu>
+              <SearchMenu></SearchMenu>
 
-         <div className="mr-6">
-             <Button
-               className="btn btn-primary"
-               onClick={handleShowLoginModal}
-             >
-               Iniciar Sesión
-             </Button>
-         </div>
-       </Navbar.Collapse>
-     </Container>
-   </Navbar>
+              <div className="mr-6">
+                <Button
+                  className="btn btn-primary"
+                  onClick={handleShowLoginModal}
+                >
+                  Iniciar Sesión
+                </Button>
+              </div>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
       ) : (
+        // Render navigation bar if user is authenticated
         <div className="fixed top-0 left-0 h-full w-64 bg-white shadow-md"
           style={{
             position: "fixed",
@@ -131,51 +134,67 @@ const NavigationBar = ({ onLogout }) => {
           }}>
             <Card.Body style={{ width: "100%", height: "auto"}} >
               <div className="mb-2 p-4">
-              <img width="90" height="90" alt="Logo" src={Logo} />
+                <img width="90" height="90" alt="Logo" src={Logo} />
                 <Typography variant="h5" color="blue-gray" style={{ color: "white" }}>
                   Class-Top
                 </Typography>
               </div>
               <List>
                 <ListItem style={{ color: "white", fontSize: "18px"}}>
-                <span>Usuario:  {loggedInUser}</span>
+                  <span>Usuario:  {loggedInUser}</span>
                 </ListItem>
-              <Link to="/Chats">
-                <ListItem style={{ width: "100%", height: "auto" }}>
-                  <ChatBubbleBottomCenterTextIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                  <span> Chat</span>
-                </ListItem>
+                <Link to="/Chats">
+                  <ListItem style={{ width: "100%", height: "auto" }}>
+                    <ChatBubbleBottomCenterTextIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                    <span> Chat</span>
+                  </ListItem>
                 </Link>
                 <Link to="/Clases">
-                <ListItem style={{ width: "100%", height: "auto" }}>
-                  <InboxIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                  <span>Clases</span>
-                </ListItem>
+                  <ListItem style={{ width: "100%", height: "auto" }}>
+                    <InboxIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                    <span>Clases</span>
+                  </ListItem>
                 </Link>
                 <Link to="/ListasDeFavoritos">
-                <ListItem style={{ width: "100%", height: "auto" }}>
-                  <HeartIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                  <span>Lista de favoritos</span>
-                </ListItem>
+                  <ListItem style={{ width: "100%", height: "auto" }}>
+                    <HeartIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                    <span>Lista de favoritos</span>
+                  </ListItem>
                 </Link>
                 <Link to="/CrearClasses">
-                <ListItem style={{ width: "100%", height: "auto" }}>
-                  <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                  <span>Pon tu clase en ClassTop</span>
-                </ListItem>
+                  <ListItem style={{ width: "100%", height: "auto" }}>
+                    <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                    <span>Pon tu clase en ClassTop</span>
+                  </ListItem>
                 </Link>
                 <Link to="/Panel">
-                <ListItem style={{ width: "100%", height: "auto" }}>
-                  <PresentationChartBarIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                  <span>Panel</span>
-                </ListItem>
+                  <ListItem style={{ width: "100%", height: "auto" }}>
+                    <PresentationChartBarIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                    <span>Panel</span>
+                  </ListItem>
                 </Link>
                 <Link to="/Cuenta">
-                <ListItem style={{ width: "100%", height: "auto" }}>
-                  <UserCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                  <span>Perfil</span>
-                </ListItem>
+                  <ListItem style={{ width: "100%", height: "auto" }}>
+                    <UserCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                    <span>Perfil</span>
+                  </ListItem>
                 </Link>
+                {isAdminUser && ( // Render only if user is admin
+                  <>
+                    <Link to="/Cuenta">
+                      <ListItem style={{ width: "100%", height: "auto" }}>
+                        <UserCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                        <span>Admin. Alumnos</span>
+                      </ListItem>
+                    </Link>
+                    <Link to="/Cuenta">
+                      <ListItem style={{ width: "100%", height: "auto" }}>
+                        <UserCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                        <span>Admin. Articulos</span>
+                      </ListItem>
+                    </Link>
+                  </>
+                )}
                 <ListItem style={{ width: "100%", height: "auto", color: "red" }} onClick={handleLogout}>
                   <PowerIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
                   <span>Cerrar sesión</span>
