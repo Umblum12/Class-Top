@@ -303,9 +303,9 @@ function Categorias() {
                       <b>{listing.title}</b>
                     </h5>
                     <h6>{listing.name}</h6>
-                    <p  className="overflow-auto" style={{ overflow: 'scroll', height: '150px' }}>
-        {listing.description}
-      </p>
+                    <p className="overflow-auto" style={{ overflow: 'scroll', height: '150px' }}>
+                      {listing.description}
+                    </p>
 
                     <Button
                       variant="primary"
