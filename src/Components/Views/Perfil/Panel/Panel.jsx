@@ -20,7 +20,9 @@ const Panel = () => {
       const response = await axios.get(`${API_URL}/clases`);
       const userClasses = response.data.filter((clase) => clase.userId === userId);
       userClasses.sort((a, b) => b.sales - a.sales); // Sort classes by sales in descending order
+
       setMostSoldClasses(userClasses.slice(0, 5)); // Set the top 5 most sold classes
+      console.log(userClasses);
     } catch (error) {
       console.error("Error fetching most sold classes:", error);
     } finally {
@@ -44,7 +46,7 @@ const Panel = () => {
     // Render a new bar chart with the updated data
     if (mostSoldClasses && mostSoldClasses.length > 0) {
       const data = mostSoldClasses.map((clase) => ({
-        name: clase.name,
+        name: clase.title,
         sales: clase.sales,
       }));
 
@@ -64,11 +66,17 @@ const Panel = () => {
         },
         options: {
           scales: {
-            xAxes: [{ // Configure x-axis
+            x: {
               ticks: {
                 beginAtZero: true,
               },
-            }],
+            },
+            y: {
+              ticks: {
+                beginAtZero: true,
+                stepSize: 1,
+              },
+            },
           },
         },
       });

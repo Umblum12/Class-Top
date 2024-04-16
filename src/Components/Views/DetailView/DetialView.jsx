@@ -7,7 +7,7 @@ import {
   Row,
   Col,
   Image,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -16,14 +16,13 @@ import { getCookie } from "../../../utils/cookieUtils";
 import axios from "axios";
 import { API_URL } from "../../../config";
 
-const DEFAULT_IMAGE_URL = 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg';
+const DEFAULT_IMAGE_URL =
+  "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg";
 
 const DetailView = () => {
   const [product, setProduct] = useState(null);
   const [isFixed, setIsFixed] = useState(false);
-  const [isPurchased, setIsPurchased] = useState(
-    localStorage.getItem("isPurchased") === "false" ? true : false
-  );
+  const [isPurchased, setIsPurchased] = useState(null);
   const [user, setUser] = useState(null);
   const [classStatistics, setClassStatistics] = useState(null);
   const navigate = useNavigate();
@@ -59,7 +58,6 @@ const DetailView = () => {
     fetchUserData(); // Always fetch user data when component mounts or product changes
   }, [product]);
 
-
   const getImagePerfil = (user) => {
     const usuario = user;
     if (usuario && usuario.isGift) {
@@ -74,9 +72,6 @@ const DetailView = () => {
       return DEFAULT_IMAGE_URL;
     }
   };
-  
-  
-  
 
   const renderClassStatistics = () => {
     // Render class statistics if the logged-in user is the creator of the class
@@ -97,7 +92,8 @@ const DetailView = () => {
       // Check if product and product.userId are both truthy
       if (product && product.userId) {
         const userResponse = await axios.get(
-          `${API_URL}/usuarios/${product.userId}`
+          `${API_URL}/usuarios/${product.userId}`,
+          {timeout: 5000}
         );
         setUser(userResponse.data);
 
@@ -109,6 +105,7 @@ const DetailView = () => {
         );
 
         setIsPurchased(isPurchased);
+        console.log(isPurchased);
         // Check if the logged-in user is the creator of the class
         if (product.userId === userId) {
           // Calculate class statistics if the user is the creator
@@ -142,22 +139,24 @@ const DetailView = () => {
   const handleSubmit = async (product) => {
     try {
       setIsLoading(true);
-      if (localStorage.getItem("isPurchased") === "true") {
+  
+      if (isPurchased) {
         // Logic for cancelling purchase
-        const response = await axios.patch(
-          `${API_URL}/clases/${product._id}/cancel-purchase`
+        const response = await axios.delete(
+          `${API_URL}/reservations/${userId}/${product._id}`
         );
   
         // Check if cancellation was successful
         if (response.status === 200) {
-          localStorage.setItem("isPurchased", false);
+          setIsPurchased(false);
           console.log("Compra cancelada exitosamente");
           toast.success("Compra cancelada exitosamente");
+  
+          // Decrement sales count of the class
+          await axios.patch(`${API_URL}/clases/${product._id}/decrement-sales`);
         } else {
           // Handle cancel purchase error
-          toast.error(
-            "Error al cancelar la compra. Por favor, inténtalo de nuevo más tarde."
-          );
+          toast.error("Error al cancelar la compra. Por favor, inténtalo de nuevo más tarde.");
         }
       } else {
         // Logic for creating a reservation
@@ -175,34 +174,27 @@ const DetailView = () => {
   
         // Check if reservation was successful
         if (response.status === 201) {
-          // Increment sales of the purchased Clase
-          await axios.patch(`${API_URL}/clases/${product._id}/purchase`);
-  
-          localStorage.setItem("isPurchased", true);
+          setIsPurchased(true);
           console.log("¡Asistencia confirmada!");
-          console.log("ventas:" + response.data.sales);
           toast.success("¡Asistencia confirmada!");
+  
+          // Increment sales count of the class
+          await axios.patch(`${API_URL}/clases/${product._id}/increment-sales`);
         } else {
           // Handle reservation error
-          toast.error(
-            "Error al confirmar la asistencia. Por favor, inténtalo de nuevo más tarde."
-          );
+          toast.error("Error al confirmar la asistencia. Por favor, inténtalo de nuevo más tarde.");
         }
       }
     } catch (error) {
       // Handle reservation or cancel purchase error
-      console.error(
-        "Error al confirmar la asistencia o cancelar la compra:",
-        error
-      );
-      toast.error(
-        "Error al confirmar la asistencia o cancelar la compra. Por favor, inténtalo de nuevo más tarde."
-      );
+      console.error("Error al confirmar la asistencia o cancelar la compra:", error);
+      toast.error("Error al confirmar la asistencia o cancelar la compra. Por favor, inténtalo de nuevo más tarde.");
     } finally {
       setIsLoading(false);
-      window.location.reload(); // Refresh the page after requests are completed
     }
   };
+  
+  
 
   if (!product || !product.imageSrc) {
     return null; // O maneja de otra forma si product no está definido
@@ -222,22 +214,23 @@ const DetailView = () => {
           <Col md={6} className="text-center mt-5">
             {product.imageSrc.slice(0, 1).map((image, index) => (
               <div key={index + 1} className="col-6 mb-3">
-                {image && image.imageUrl && ( // Verifica si image y image.imageUrl están definidos
-                  <Image
-                    src={image.imageUrl}
-                    className="img-fluid object-cover rounded-md"
-                    alt={`Product Image ${index + 2}`}
-                    style={{
-                      width: "100%",
-                      height: "430px",
-                      marginBottom: "8px",
-                      minWidth: "600px",
-                      borderRadius: "4px",
-                      boxShadow: "0 8px 28px rgba(0,0,0,0.28)",
-                      border: "1px solid rgba(0,0,0,0.04)",
-                    }}
-                  />
-                )}
+                {image &&
+                  image.imageUrl && ( // Verifica si image y image.imageUrl están definidos
+                    <Image
+                      src={image.imageUrl}
+                      className="img-fluid object-cover rounded-md"
+                      alt={`Product Image ${index + 2}`}
+                      style={{
+                        width: "100%",
+                        height: "430px",
+                        marginBottom: "8px",
+                        minWidth: "600px",
+                        borderRadius: "4px",
+                        boxShadow: "0 8px 28px rgba(0,0,0,0.28)",
+                        border: "1px solid rgba(0,0,0,0.04)",
+                      }}
+                    />
+                  )}
               </div>
             ))}
           </Col>
@@ -249,20 +242,21 @@ const DetailView = () => {
                 index // Ajustamos el slice para tomar solo las primeras 4 imágenes
               ) => (
                 <div key={index} className="col-6 mb-3">
-                  {image && image.imageUrl && ( // Verifica si image y image.imageUrl están definidos
-                    <Image
-                      src={image.imageUrl}
-                      className="img-fluid object-cover rounded-md"
-                      alt={`Product Image ${index + 1}`} // Incrementamos index en 1 para evitar índice 0
-                      style={{
-                        width: "100%",
-                        height: "200px",
-                        borderRadius: "4px",
-                        boxShadow: "0 8px 28px rgba(0,0,0,0.28)",
-                        border: "1px solid rgba(0,0,0,0.04)",
-                      }}
-                    />
-                  )}
+                  {image &&
+                    image.imageUrl && ( // Verifica si image y image.imageUrl están definidos
+                      <Image
+                        src={image.imageUrl}
+                        className="img-fluid object-cover rounded-md"
+                        alt={`Product Image ${index + 1}`} // Incrementamos index en 1 para evitar índice 0
+                        style={{
+                          width: "100%",
+                          height: "200px",
+                          borderRadius: "4px",
+                          boxShadow: "0 8px 28px rgba(0,0,0,0.28)",
+                          border: "1px solid rgba(0,0,0,0.04)",
+                        }}
+                      />
+                    )}
                 </div>
               )
             )}
@@ -278,10 +272,10 @@ const DetailView = () => {
                   <h2>Acerca del autor</h2>
                 </Card.Title>
                 <Card.Body>
-                <img
-                    src={getImagePerfil(user) }
-                    alt="Perfil de usuario"
-                    style={{height: '150px', width: '150px'}}
+                  <img
+                    src={getImagePerfil(user)}
+                    alt="Foto del autor"
+                    style={{ height: "150px", width: "150px" }}
                     className="rounded-circle mb-4 img-fluid"
                   />
                   <h3>{user.User}</h3>
@@ -328,9 +322,7 @@ const DetailView = () => {
                       variant="primary"
                       onClick={() => handleSubmit(product)}
                     >
-                      {localStorage.getItem("isPurchased") === "true"
-                        ? "Cancelar Compra"
-                        : "Pagar"}
+                      {isPurchased ? "Cancelar Compra" : "Pagar"}
                     </Button>
                   ) : (
                     !token && ( // Check only if token is not present (not logged in)

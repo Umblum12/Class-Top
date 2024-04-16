@@ -45,7 +45,7 @@ const NavigationBar = ({ onLogout }) => {
     eraseCookie("token");
     localStorage.removeItem("username");
     localStorage.removeItem("password");
-
+    localStorage.removeItem("isPurchased");
     navigate('/');
     window.location.reload();
   };

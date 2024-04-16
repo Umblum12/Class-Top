@@ -261,7 +261,7 @@ function Categorias() {
                 <div className="course smaller-card">
                   <div
                     className="d-flex align-items-center course-preview"
-                    style={{ height: "350px" }}
+                    style={{ height: "370px" }}
                   >
                     <FaHeart
                       style={{
