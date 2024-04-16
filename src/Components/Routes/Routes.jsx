@@ -6,7 +6,6 @@ import AboutUs from '../Views/AboutUs/AboutUs';
 import Cuenta from '../Views/Perfil/Cuenta/Cuenta';
 import Panel from '../Views/Perfil/Panel/Panel';
 import Chats from '../Views/Perfil/Chats/Chats';
-import Notificaciones from '../Views/Perfil/Notificaciones/Notificaciones'
 import Clases from '../Views/Perfil/Clases/Clases'
 import ListasDeFavoritos from '../Views/Perfil/ListasDeFavoritos/ListaDeFavoritos'
 import CrearClasses from '../Views/Perfil/CrearClasses/CrearClasses'
@@ -31,7 +30,6 @@ const AppRoutes = () => {
         <Route path="/Panel" element={<Panel />} />
         <Route path="/Cuenta" element={<Cuenta />} />
         <Route path="/Chats" element={<Chats />} />
-        <Route path="/Notificaciones" element={<Notificaciones />} />
         <Route path="/Clases" element={<Clases />} />
         <Route path="/ListasDeFavoritos" element={<ListasDeFavoritos />} />
         <Route path="/CrearClasses" element={<CrearClasses />} />

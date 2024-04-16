@@ -93,11 +93,6 @@ const NavigationBar = ({ onLogout }) => {
                       Chats
                     </Dropdown.Item>
                   </Link>
-                  <Link to="/Notificaciones">
-                    <Dropdown.Item as="button">
-                      Notificaciones
-                    </Dropdown.Item>
-                  </Link>
                   <Link to="/Clases">
                     <Dropdown.Item as="button">
                       Clases
