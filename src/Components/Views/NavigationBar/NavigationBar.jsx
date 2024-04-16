@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Button, Spinner, Dropdown, Card } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import Login from "../Login/Login";
@@ -15,18 +14,10 @@ import {
   Typography,
   List,
   ListItem,
-  ListItemPrefix,
-  ListItemSuffix,
-  Chip,
-  Accordion,
-  AccordionHeader,
-  AccordionBody,
 } from "@material-tailwind/react";
 import {
   PresentationChartBarIcon,
-  ShoppingBagIcon,
   UserCircleIcon,
-  Cog6ToothIcon,
   InboxIcon,
   PowerIcon,
   ChatBubbleBottomCenterTextIcon,
@@ -34,8 +25,9 @@ import {
   PlusCircleIcon,
   
 } from "@heroicons/react/24/solid";
-import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-
+import { API_URL } from "../../../config";
+import axios from "axios";
+import { getCookie } from "../../../utils/cookieUtils";
 
 const NavigationBar = ({ onLogout }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -55,6 +47,7 @@ const NavigationBar = ({ onLogout }) => {
       setLoggedInUser(storedUsername);
       setIsAuthenticated(true);
     }
+
   }, []);
 
   const handleLogin = (username) => {

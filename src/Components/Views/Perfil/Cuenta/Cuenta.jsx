@@ -11,6 +11,7 @@ const Cuenta = () => {
   const [user, setUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false); // Nuevo estado para el modal de subir imagen
   const [selectedFile, setSelectedFile] = useState(null);
   const [editedUserData, setEditedUserData] = useState(null);
   const userId = getCookie("userId");
@@ -70,10 +71,59 @@ const Cuenta = () => {
         console.error("Error al eliminar la cuenta:", error);
       });
   };
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditedUserData({ ...editedUserData, [name]: value });
+  };
+
+  const handleFileInputChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setSelectedFile(file);
+    } else {
+      console.log("Por favor, sube solo archivos de imagen.");
+    }
+  };
+
+  const handleUpload = (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    axios
+      .post(`${API_URL}/usuarios/upload/${userId}`, formData)
+      .then((response) => {
+        AlertService.success("Imagen cargada con éxito");
+        console.log("Imagen cargada con éxito:", response.data);
+        actualizarDatosUsuario();
+        setShowUploadModal(false);
+        setSelectedFile(null);
+      })
+      .catch((error) => {
+        console.error("Error al cargar la imagen:", error);
+      });
+  };
+
+  const handleClickFileInput = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setSelectedFile(file);
+    } else {
+      console.log("Por favor, sube solo archivos de imagen.");
+    }
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
   };
 
   return (
@@ -103,19 +153,33 @@ const Cuenta = () => {
                     style={{ marginBottom: '20px' }} // Agregamos margen inferior
                   />
                 )}
-                <Button variant="primary" onClick={() => setShowModal(true)}>Editar datos</Button> {/* Cambiamos a Button */}
+                <Button variant="info" onClick={() => setShowUploadModal(true)}>Subir imagen</Button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleFileInputChange}
+                />
+                {selectedFile && (
+                  <div>
+                    <p>Nombre del archivo: {selectedFile.name}</p>
+                    <p>Tipo de archivo: {selectedFile.type}</p>
+                    <Button onClick={handleRemoveFile}>Eliminar</Button>
+                  </div>
+                )}
                 <Table bordered>
                   <tbody>
                     <tr>
-                      <th>Nombre:</th> {/* Cambiamos a th */}
+                      <th>Nombre:</th>
                       <td>{user.User}</td>
                     </tr>
                     <tr>
-                      <th>Email:</th> {/* Cambiamos a th */}
+                      <th>Email:</th>
                       <td>{user.Mail}</td>
                     </tr>
                     <tr>
-                      <th>Rol:</th> {/* Cambiamos a th */}
+                      <th>Rol:</th>
                       <td>{user.Rol}</td>
                     </tr>
                   </tbody>
@@ -125,8 +189,8 @@ const Cuenta = () => {
                 <div className="container">
                   <div className="card">
                     <h1>Configuración</h1>
-                    <Button variant="primary" onClick={() => setShowModal(true)}>Editar datos del usuario</Button> {/* Cambiamos a Button */}
-                    <Button variant="danger" onClick={() => setShowDeleteConfirmation(true)}>Eliminar cuenta</Button> {/* Cambiamos a Button */}
+                    <Button variant="primary" onClick={() => setShowModal(true)}>Editar datos del usuario</Button>
+                    <Button variant="danger" onClick={() => setShowDeleteConfirmation(true)}>Eliminar cuenta</Button>
                   </div>
                 </div>
               </div>
@@ -164,7 +228,46 @@ const Cuenta = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Modal de confirmación de eliminación de cuenta */}
+
+      <Modal show={showUploadModal} onHide={() => setShowUploadModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Subir imagen</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedFile ? (
+            <div>
+              <p>Nombre del archivo: {selectedFile.name}</p>
+              <p>Tipo de archivo: {selectedFile.type}</p>
+              <Button onClick={handleRemoveFile}>Eliminar</Button>
+            </div>
+          ) : (
+            <div
+              onClick={handleClickFileInput}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              style={{
+                border: "2px dashed #ccc",
+                padding: "20px",
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+            >
+              <p>Arrastra y suelta aquí tu imagen</p>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cerrar
+          </Button>
+          {selectedFile && (
+            <Button variant="primary" onClick={() => handleUpload(selectedFile)}>
+              Subir
+            </Button>
+          )}
+        </Modal.Footer>
+      </Modal>
+
       <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Eliminar cuenta</Modal.Title>
@@ -181,6 +284,37 @@ const Cuenta = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+  <Modal.Header closeButton>
+    <Modal.Title>Editar datos de usuario</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <Form>
+      <Form.Group controlId="formBasicUsername">
+        <Form.Label>Nombre de usuario</Form.Label>
+        <Form.Control type="text" placeholder="Enter username" name="User" defaultValue={user?.User} onChange={handleChange} />
+      </Form.Group>
+      <Form.Group controlId="formBasicEmail">
+        <Form.Label>Email</Form.Label>
+        <Form.Control type="email" placeholder="Enter email" name="Mail" defaultValue={user?.Mail} onChange={handleChange} />
+      </Form.Group>
+      <Form.Group controlId="formBasicRole">
+        <Form.Label>Rol</Form.Label>
+        <Form.Control type="text" placeholder="Enter role" name="Rol" defaultValue={user?.Rol} onChange={handleChange} />
+      </Form.Group>
+    </Form>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowModal(false)}>
+      Cerrar
+    </Button>
+    <Button variant="primary" onClick={handleEditUser}>
+      Guardar cambios
+    </Button>
+  </Modal.Footer>
+</Modal>
+
     </div>
   );
 };
