@@ -34,7 +34,6 @@ import {
   PlusCircleIcon,
   
 } from "@heroicons/react/24/solid";
-
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 
 
@@ -126,17 +125,21 @@ const NavigationBar = ({ onLogout }) => {
             right: 0,
             top: "auto",
             transition: "transform 1s ease-in-out",
-            width: "250px",
+            width: "260px",
             height: "960px",
             backgroundColor: "#2b245b"
           }}>
             <Card.Body style={{ width: "100%", height: "auto"}} >
               <div className="mb-2 p-4">
-                <Typography variant="h5" color="blue-gray">
-                  Sidebar
+              <img width="90" height="90" alt="Logo" src={Logo} />
+                <Typography variant="h5" color="blue-gray" style={{ color: "white" }}>
+                  Class-Top
                 </Typography>
               </div>
               <List>
+                <ListItem style={{ color: "white", fontSize: "18px"}}>
+                <span>Usuario:  {loggedInUser}</span>
+                </ListItem>
               <Link to="/Chats">
                 <ListItem style={{ width: "100%", height: "auto" }}>
                   <ChatBubbleBottomCenterTextIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
