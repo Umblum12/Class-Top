@@ -89,7 +89,7 @@ const Panel = () => {
         <Card>
           <Card.Body>
             {mostSoldClasses && mostSoldClasses.length > 0 && (
-              <Card.Title>Clases más vendidas</Card.Title>
+              <Card.Title>Clases que mas venden</Card.Title>
             )}
             {mostSoldClasses && mostSoldClasses.length > 0 ? (
               <canvas id="bar-chart"></canvas>
