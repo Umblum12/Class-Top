@@ -39,7 +39,7 @@ const AppRoutes = () => {
                   key={index} 
                   linkAs={Link} 
                   linkProps={{ to: currentPath }} 
-                  className="btn btn-outline-info" // Aplicar clase btn-outline-info
+                  className="btn btn-outline-secondary" // Aplicar clase btn-outline-info
                   style={{ margin: "0 5px" }} // Ajustar margen
               >
                   {segment}
@@ -52,7 +52,7 @@ const AppRoutes = () => {
               key="home" 
               linkAs={Link} 
               linkProps={{ to: "/" }} 
-              className="btn btn-outline-info" // Aplicar clase btn-outline-info
+              className="btn btn-outline-secondary" // Aplicar clase btn-outline-info
               style={{ margin: "0 5px" }} // Ajustar margen
           >
               Home
