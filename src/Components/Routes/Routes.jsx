@@ -24,6 +24,8 @@ const AppRoutes = () => {
       <Route path="/" element={<Categorias />} />
       <Route path="/Categorias" element={<Categorias />} />
       <Route path="/DetailView" element={<DetialView />} />
+      <Route path="/VerificacionCorreo/:email" element={<Verification />} />
+
       <Route element={<AuthService />}>
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/Panel" element={<Panel />} />
@@ -38,7 +40,6 @@ const AppRoutes = () => {
         <Route element={<AuthAdmin />}>
           <Route path="/CrudAlumnos" element={<CrudAlumnos />} />
         </Route>
-        <Route path="/VerificacionCorreo/:email" element={<Verification />} /> {/* Asegúrate de incluir esta ruta con el parámetro email */}
       </Route>
     </Routes>
   );
