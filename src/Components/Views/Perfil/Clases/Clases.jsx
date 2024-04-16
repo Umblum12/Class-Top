@@ -79,15 +79,15 @@ const Clases = ({}) => {
   };
 
   return (
-    <div
+    <div className="courses-container"
       style={{
         backgroundColor: "#f8f9fa",
         minHeight: "100vh",
         marginTop: "150px",
       }}
     >
-      <Container>
-        <Card>
+      <Container >
+        <Card className="courses-container bg-dark text-light courses-container">
           <h1 className="text-4xl font-bold mb-6">Lista de clases</h1>
         </Card>
       </Container>

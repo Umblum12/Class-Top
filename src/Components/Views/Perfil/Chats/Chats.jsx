@@ -191,20 +191,25 @@ const Chats = () => {
         }, [messageThread]);
 
   return (
-    <MDBContainer fluid className="py-5" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh", marginTop: "150px" }}>
+    <MDBContainer fluid className=" courses-container" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh", marginTop: "150px" }}>
+          <Container style={{marginBottom: '20px'}}>
+        <Card className="courses-container bg-dark text-light courses-container">
+          <h1 className="text-4xl font-bold mb-6" >Chat</h1>
+        </Card>
+        </Container>
       <MDBRow>
         <MDBCol md="4">
-          <MDBCard>
+          <MDBCard className="courses-container">
             <MDBCardBody>
               <h5 className="font-weight-bold mb-3 text-center text-lg-start">
                 Usuarios
               </h5>
-              <MDBTypography listUnStyled className="mb-0">
+              <MDBTypography listUnStyled className="mb-0" >
                 {loading ? (
                   <div>Cargando usuarios...</div>
                 ) : (
                   usuariosChat.map((usuario, index) => (
-                    <li key={index} className={`p-2 border-bottom`} style={{ backgroundColor: selectedUser === usuario._id ? "#ddd" : "#eee" }}>
+                    <li key={index} className={`p-2 border-bottom courses-container`} style={{ backgroundColor: selectedUser === usuario._id ? "#ddd" : "#eee" }}>
                       <a href="#!" className="d-flex justify-content-between" onClick={() => handleUserClick(usuario._id)}>
                         <div className="d-flex flex-row">
                           <img
@@ -233,8 +238,8 @@ const Chats = () => {
         </MDBCol>
         <MDBCol md="8">
           {selectedUser ? (
-       <MDBCard>
-       <MDBCardBody>
+       <MDBCard className="courses-container">
+       <MDBCardBody >
          <div className="mb-10">
            <h2>ClassTop Chat</h2>
            {messageThread.length === 0 && <div>No hay mensajes aún... saluda usando el cuadro de mensajes a continuación</div>}

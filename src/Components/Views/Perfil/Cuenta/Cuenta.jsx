@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { getCookie, eraseCookie } from "../../../../utils/cookieUtils";
-import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AlertService from "../../../../Services/AlertService/AlertService";
 import { API_URL } from "../../../../config";
 import {  useNavigate } from "react-router-dom";
+import { Table, Container, Card, Button, Spinner, Modal } from "react-bootstrap";
 
 const Cuenta = () => {
   const [user, setUser] = useState(null);
@@ -104,11 +104,13 @@ const Cuenta = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ paddingTop: "100px" }}>
-      <div className="card">
-        <div className="card-header bg-dark text-light">
-          <h1 className="mb-0">Cuenta</h1>
-        </div>
+    <div className="courses-container mt-5 " >
+          <Container style={{marginBottom: '20px'}}>
+        <Card className="courses-container bg-dark text-light courses-container">
+          <h1 className="mb-0 ">Perfil</h1>
+        </Card>
+        </Container>
+      <div className="card courses-container ">
         <div className="card-body">
           {user && (
             <div className="row">

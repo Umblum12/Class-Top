@@ -1,17 +1,42 @@
 import React, { useState, useEffect } from "react";
-import { Container, Button, DropdownButton, Spinner } from "react-bootstrap";
+import { Container, Button, Spinner, Dropdown, Card } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
-import Dropdown from "react-bootstrap/Dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import Login from "../Login/Login";
 import { useCookies } from 'react-cookie';
 import Logo from "../../../assets/Images/Logo_Class_Top.jpg";
-import CarouselBar from "../CarouselBar/CarouselBar";
 import NavigationLinks from "./NavigationLinks";
 import SearchMenu from "./SearchMenu";
-import { eraseCookie, setCookie } from "../../../utils/cookieUtils";
+import { eraseCookie } from "../../../utils/cookieUtils";
+
+import {
+  Typography,
+  List,
+  ListItem,
+  ListItemPrefix,
+  ListItemSuffix,
+  Chip,
+  Accordion,
+  AccordionHeader,
+  AccordionBody,
+} from "@material-tailwind/react";
+import {
+  PresentationChartBarIcon,
+  ShoppingBagIcon,
+  UserCircleIcon,
+  Cog6ToothIcon,
+  InboxIcon,
+  PowerIcon,
+  ChatBubbleBottomCenterTextIcon,
+  HeartIcon,
+  PlusCircleIcon,
+  
+} from "@heroicons/react/24/solid";
+
+import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+
 
 const NavigationBar = ({ onLogout }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -50,98 +75,113 @@ const NavigationBar = ({ onLogout }) => {
     window.location.reload();
   };
 
+  const SidebarWithContentSeparator = () => {
+    const [open, setOpen] = React.useState(0);
+
+    const handleOpen = (value) => {
+      setOpen(open === value ? 0 : value);
+    };
+
+  };
+
   return (
     <div>
       {!isAuthenticated ? (
-        <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: "#2b245b" }} fixed="top" className="flex-grow-1">
-          <Container>
-            <Navbar.Brand href="/" className="p-3">
-              <img width="90" height="90" alt="Logo" src={Logo} />
-            </Navbar.Brand>
+     <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: "#2b245b" }} fixed="top" className="flex-grow-1">
+     <Container>
+       <Navbar.Brand href="/" className="p-3">
+         <img width="90" height="90" alt="Logo" src={Logo} />
+       </Navbar.Brand>
 
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 
-            <Navbar.Collapse id="responsive-navbar-nav">
-              <Container className="g-4">
-                <NavigationLinks />
-              </Container>
+       <Navbar.Collapse id="responsive-navbar-nav">
+         <Container className="g-4">
+           <NavigationLinks />
+         </Container>
 
-              <SearchMenu></SearchMenu>
+         <SearchMenu></SearchMenu>
 
-              <div className="mr-6">
-                {!isAuthenticated ? (
-                  <Button
-                    className="btn btn-primary"
-                    onClick={handleShowLoginModal}
-                  >
-                    Iniciar Sesión
-                  </Button>
-                ) : (
-                  <DropdownButton
-                    id="dropdown-item-button"
-                    title={
-                      <span>
-                        <FontAwesomeIcon icon={faUser} />
-                        {isAuthenticated && loggedInUser && (
-                          <span> {loggedInUser}</span>
-                        )}
-                      </span>
-                    }
-                    className="custom-dropdown"
-                  >
-                    <Link to="/Chats">
-                      <Dropdown.Item as="button">
-                        Chats
-                      </Dropdown.Item>
-                    </Link>
-                    <Link to="/Clases">
-                      <Dropdown.Item as="button">
-                        Clases
-                      </Dropdown.Item>
-                    </Link>
-                    <Link to="/ListasDeFavoritos">
-                      <Dropdown.Item as="button">
-                        Lista de favoritos
-                      </Dropdown.Item>
-                    </Link>
-                    <hr className="bg-white" />
-                    <Link to="/CrearClasses">
-                      <Dropdown.Item as="button">
-                        Pon tu clase en ClassTop
-                      </Dropdown.Item>
-                    </Link>
-                    <Link to="/Cuenta">
-                      <Dropdown.Item as="button">
-                        Cuenta
-                      </Dropdown.Item>
-                    </Link>
-                    <Link to="/Panel">
-                      <Dropdown.Item as="button">
-                        Panel
-                      </Dropdown.Item>
-                    </Link>
-                    <hr className="bg-white" />
-                    <Link to="/CrudAlumnos">
-                      <Dropdown.Item as="button">
-                        Crud Alumnos
-                      </Dropdown.Item>
-                    </Link>
-                    <Link to="/CentroDeAyuda">
-                      <Dropdown.Item as="button">
-                        Centro de ayuda
-                      </Dropdown.Item>
-                    </Link>
-                    <Dropdown.Item as="button" onClick={handleLogout}>
-                      Cerrar Sesión
-                    </Dropdown.Item>
-                  </DropdownButton>
-                )}
-              </div>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+         <div className="mr-6">
+             <Button
+               className="btn btn-primary"
+               onClick={handleShowLoginModal}
+             >
+               Iniciar Sesión
+             </Button>
+         </div>
+       </Navbar.Collapse>
+     </Container>
+   </Navbar>
       ) : (
-        <h1>hola</h1>
+        <div className="fixed top-0 left-0 h-full w-64 bg-white shadow-md"
+          style={{
+            position: "fixed",
+            right: 0,
+            top: "auto",
+            transition: "transform 1s ease-in-out",
+          }}>
+          <Card style={{
+            position: "fixed",
+            right: 0,
+            top: "auto",
+            transition: "transform 1s ease-in-out",
+            width: "250px",
+            height: "960px",
+            backgroundColor: "#2b245b"
+          }}>
+            <Card.Body style={{ width: "100%", height: "auto"}} >
+              <div className="mb-2 p-4">
+                <Typography variant="h5" color="blue-gray">
+                  Sidebar
+                </Typography>
+              </div>
+              <List>
+              <Link to="/Chats">
+                <ListItem style={{ width: "100%", height: "auto" }}>
+                  <ChatBubbleBottomCenterTextIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                  <span> Chat</span>
+                </ListItem>
+                </Link>
+                <Link to="/Clases">
+                <ListItem style={{ width: "100%", height: "auto" }}>
+                  <InboxIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                  <span>Clases</span>
+                </ListItem>
+                </Link>
+                <Link to="/ListasDeFavoritos">
+                <ListItem style={{ width: "100%", height: "auto" }}>
+                  <HeartIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                  <span>Lista de favoritos</span>
+                </ListItem>
+                </Link>
+                <Link to="/CrearClasses">
+                <ListItem style={{ width: "100%", height: "auto" }}>
+                  <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                  <span>Pon tu clase en ClassTop</span>
+                </ListItem>
+                </Link>
+                <Link to="/Panel">
+                <ListItem style={{ width: "100%", height: "auto" }}>
+                  <PresentationChartBarIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                  <span>Panel</span>
+                </ListItem>
+                </Link>
+                <Link to="/Cuenta">
+                <ListItem style={{ width: "100%", height: "auto" }}>
+                  <UserCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                  <span>Perfil</span>
+                </ListItem>
+                </Link>
+                <ListItem style={{ width: "100%", height: "auto", color: "red" }} onClick={handleLogout}>
+                  <PowerIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                  <span>Cerrar sesión</span>
+                </ListItem >
+              </List>
+
+            </Card.Body>
+          </Card>
+        </div>
       )}
       <div>
         <Login

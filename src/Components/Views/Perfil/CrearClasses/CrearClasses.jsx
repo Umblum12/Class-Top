@@ -128,16 +128,17 @@ const CrearClasses = () => {
 
   return (
     <div>
-      <div
+      <div className="courses-container"
         style={{
           backgroundColor: "#f8f9fa",
           minHeight: "100vh",
           marginTop: "150px",
-          padding: "20px",
         }}
       >
-        <Container>
-          <h1 style={{marginBottom: '20px'}} >Mis Clases</h1>
+        <Container style={{marginBottom: '20px'}}>
+        <Card className="courses-container bg-dark text-light courses-container">
+          <h1 className="text-4xl font-bold mb-6" >Mis Clases</h1>
+        </Card>
         </Container>
 
         <Button
@@ -156,9 +157,9 @@ const CrearClasses = () => {
         <Table
           border="1"
           style={{ width: "100%", maxWidth: "800px", margin: "0 auto" }}
-          className="table-primary table table-bordered border-primary"
+          className="table-primary table table-bordered border-primary "
         >
-          <thead style={{ color: "red" }}>
+          <thead style={{ color: "red" }} >
             <tr>
               <th style={{ textAlign: "left" }}>ID</th>
               <th style={{ textAlign: "left" }}>Título</th>
