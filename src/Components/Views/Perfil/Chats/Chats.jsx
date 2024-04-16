@@ -222,8 +222,6 @@ const Chats = () => {
                         </div>
                         <div className="pt-1">
                           <p className="small text-muted mb-1">Just now</p>
-                          {/* Ajusta el conteo de mensajes no leídos según tu lógica */}
-                          <span className="badge bg-danger float-end">1</span>
                         </div>
                       </a>
                     </li>
