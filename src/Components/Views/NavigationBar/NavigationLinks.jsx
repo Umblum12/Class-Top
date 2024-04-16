@@ -8,6 +8,7 @@ const NavigationLinks = () => {
             <Nav>
                 <Nav.Link
                     className="nav-link btn btn-outline-info"
+                    style={{ marginRight: "25px" }}
                     aria-current="page"
                 >
                     <Link to="/">
@@ -24,6 +25,7 @@ const NavigationLinks = () => {
                 </Nav.Link>
                 <Nav.Link
                     className="nav-link btn btn-outline-info"
+                    style={{ marginRight: "25px" }}
                     aria-current="page"
                 >
                     <span>

@@ -88,7 +88,7 @@ const Clases = ({}) => {
     >
       <Container >
         <Card className="courses-container bg-dark text-light courses-container">
-          <h1 className="text-4xl font-bold mb-6">Lista de clases</h1>
+          <h1 className="text-4xl font-bold mb-6">Asistencias</h1>
         </Card>
       </Container>
       <Container className="my-5">
