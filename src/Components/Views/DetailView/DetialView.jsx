@@ -145,23 +145,23 @@ const DetailView = () => {
         const response = await axios.delete(
           `${API_URL}/reservations/${userId}/${product._id}`
         );
-        console.log("reservacion borrada we " + response.data);
-
+  
         // Check if cancellation was successful
         if (response.status === 200) {
           setIsPurchased(false);
           console.log("Compra cancelada exitosamente");
           toast.success("Compra cancelada exitosamente");
+  
+          // Decrement sales count of the class
+          await axios.patch(`${API_URL}/clases/${product._id}/decrement-sales`);
         } else {
           // Handle cancel purchase error
-          toast.error(
-            "Error al cancelar la compra. Por favor, inténtalo de nuevo más tarde."
-          );
+          toast.error("Error al cancelar la compra. Por favor, inténtalo de nuevo más tarde.");
         }
       } else {
         // Logic for creating a reservation
         const reservation = {
-          listingsid: product._id, // Asegúrate de que el nombre de la clave sea correcto (listingId)
+          listingsid: product._id,
           userid: userId,
           date: product.date,
           detail: product.description,
@@ -176,28 +176,24 @@ const DetailView = () => {
         if (response.status === 201) {
           setIsPurchased(true);
           console.log("¡Asistencia confirmada!");
-          console.log(response.data);
           toast.success("¡Asistencia confirmada!");
+  
+          // Increment sales count of the class
+          await axios.patch(`${API_URL}/clases/${product._id}/increment-sales`);
         } else {
           // Handle reservation error
-          toast.error(
-            "Error al confirmar la asistencia. Por favor, inténtalo de nuevo más tarde."
-          );
+          toast.error("Error al confirmar la asistencia. Por favor, inténtalo de nuevo más tarde.");
         }
       }
     } catch (error) {
       // Handle reservation or cancel purchase error
-      console.error(
-        "Error al confirmar la asistencia o cancelar la compra:",
-        error
-      );
-      toast.error(
-        "Error al confirmar la asistencia o cancelar la compra. Por favor, inténtalo de nuevo más tarde."
-      );
+      console.error("Error al confirmar la asistencia o cancelar la compra:", error);
+      toast.error("Error al confirmar la asistencia o cancelar la compra. Por favor, inténtalo de nuevo más tarde.");
     } finally {
       setIsLoading(false);
     }
   };
+  
   
 
   if (!product || !product.imageSrc) {
