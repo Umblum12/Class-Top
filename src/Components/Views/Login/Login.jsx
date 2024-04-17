@@ -499,7 +499,7 @@ const Login = ({ show, handleClose, onLogin }) => {
 
 
       {IsLoading && (
-        <div className="overlay">
+        <div className="overlay" style={{ position: "fixed" }}>
           <Spinner className="custom-spinner" animation="border" />
         </div>
       )}

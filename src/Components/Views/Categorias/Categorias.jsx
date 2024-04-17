@@ -5,6 +5,7 @@ import {
   Col,
   Carousel,
   Button,
+  Card,
   Spinner,
   Dropdown
 } from "react-bootstrap";
@@ -55,7 +56,10 @@ function Categorias() {
   const [endDate, setEndDate] = useState(null);
   const userId = getCookie("userId");
 
-  const [IsLoading, setIsLoading] = useState(false);
+  const [location, setLocation] = useState("");
+  const [alumnos, setAlumnos] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!userId) {
@@ -107,6 +111,28 @@ function Categorias() {
 
   const handleProductClick = (listing) => {
     navigate("/DetailView", { state: { product: listing } });
+  };
+
+  const handleFilter = () => {
+    setIsLoading(true);
+    axios
+      .get(`${API_URL}/clases`, {
+        params: {
+          location: location,
+          startDate: startDate,
+          endDate: endDate,
+          students: alumnos,
+        }
+      })
+      .then((response) => {
+        setIsLoading(false);
+        const listingsFromDB = response.data;
+        setListings(listingsFromDB);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.error("Error fetching filtered data:", error);
+      });
   };
 
   const handleHeartClick = (product) => {
@@ -181,8 +207,10 @@ function Categorias() {
 
   return (
     <div className="courses-container" style={{ marginTop: "10px" }}>
-      <Container>
-        <h1 className="text-4xl font-bold mb-6 ">Lista de clases</h1>
+      <Container style={{ marginBottom: '20px' }}>
+        <Card className="courses-container bg-dark text-light courses-container">
+          <h1 className="text-4xl font-bold mb-6" >Lista de clases</h1>
+        </Card>
       </Container>
       <Container>
         <Container>
@@ -193,6 +221,7 @@ function Categorias() {
                   placeholder="Locación"
                   className="form-control border-end-0 border rounded-pill"
                   style={{ marginRight: "10px" }}
+                  onChange={(e) => setLocation(e.target.value)}
                 ></input>
               </div>
               <div className="p-2 bd-highlight">
@@ -218,6 +247,7 @@ function Categorias() {
                   placeholder="Alumnos"
                   className="form-control border-end-0 border rounded-pill"
                   style={{ marginRight: "20px" }}
+                  onChange={(e) => setAlumnos(e.target.value)}
                 ></input>
               </div>
 
@@ -243,6 +273,7 @@ function Categorias() {
                 <Button
                   type="button"
                   className="btn btn-primary border-start-0 rounded-pill"
+                  onClick={handleFilter}
                 >
                   <FontAwesomeIcon icon={faSearch} />
                 </Button>
@@ -319,7 +350,7 @@ function Categorias() {
         ))}
       </Container>
 
-      {IsLoading && (
+      {isLoading && (
         <div className="overlay">
           <Spinner className="custom-spinner" animation="border" />
         </div>

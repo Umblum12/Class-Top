@@ -53,10 +53,14 @@ const ModalEditarClase = ({ show, handleClose, registroSeleccionado, setRegistro
     try {
       await axios.patch(`${API_URL}/clases/${id}`, formularioActualizar);
       const userId = getCookie('userId');
-
-      const response = await axios.get(`${API_URL}/clases?userId=${userId}`);
-
-      setRegistros(response.data);
+        console.log(userId);
+      const response = await axios.get(
+        `${API_URL}/clases`
+      );
+      const filteredRegistros = response.data.filter(
+        (registro) => registro.userId === userId
+      );
+      setRegistros(filteredRegistros);
       handleClose();
     } catch (error) {
       console.error('Error al actualizar el registro:', error);

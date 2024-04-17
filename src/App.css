@@ -10,6 +10,8 @@ body{
   background-color: #6564b8;
 }
 
+::-webkit-scrollbar {display:none;}
+
 .btn {
 	background-color: #2A265F;
 	border: 0;
