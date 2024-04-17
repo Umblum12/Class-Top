@@ -2,7 +2,7 @@ name: Build and deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   # Run workflow manually
   workflow_dispatch:
 
@@ -23,7 +23,7 @@ jobs:
           name: dist
           path: dist
   deploy:
-    name: 🟢 Deploy
+    name: Deploy
     needs: build
     runs-on: ubuntu-latest
     steps:
