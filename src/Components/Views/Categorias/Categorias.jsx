@@ -21,9 +21,7 @@ import { getCookie } from "../../../utils/cookieUtils";
 import { API_URL } from "../../../config";
 
 function ProductCarousel({ images, onClick }) {
-  // Verificar si images es undefined o null
   if (!images || images.length === 0) {
-    // Si no hay imágenes, mostrar una imagen predeterminada
     return (
       <img
         className="d-block w-100"
@@ -39,7 +37,7 @@ function ProductCarousel({ images, onClick }) {
         <Carousel.Item key={index} onClick={onClick}>
           <img
             className="d-block w-100"
-            src={image.imageUrl} // Modificado para mostrar la URL de la imagen
+            src={image.imageUrl}
             alt={`Slide ${index}`}
           />
         </Carousel.Item>
@@ -75,16 +73,13 @@ function Categorias() {
     }
     setIsLoading(true);
     axios
-      .get(
-        `${API_URL}/usuarios/${userId}`
-      )
+      .get(`${API_URL}/usuarios/${userId}`)
       .then((response) => {
         const userData = response.data;
         const userFavorites = userData.isFavorite || [];
 
         axios
           .get(`${API_URL}/clases`)
-
           .then((response) => {
             setIsLoading(false);
             const listingsFromDB = response.data;
@@ -125,17 +120,14 @@ function Categorias() {
       .map((listing) => listing._id);
 
     axios
-      .patch(
-        `${API_URL}/usuarios/${userId}`,
-        { isFavorite: newFavorites }
-      )
+      .patch(`${API_URL}/usuarios/${userId}`, { isFavorite: newFavorites })
       .then((response) => {
         if (isFavorite) {
           toast.success("Clase agregada a favoritos");
           toast.info(
             <div>
               <span>¿Quieres ver la lista de favoritos ahora?</span>
-              <br></br>
+              <br />
               <Button
                 variant="info"
                 size="sm"
@@ -182,7 +174,7 @@ function Categorias() {
   return (
     <div className="courses-container" style={{ marginTop: "10px" }}>
       <Container>
-        <h1 className="text-4xl font-bold mb-6 ">Lista de clases</h1>
+        <h1 className="text-4xl font-bold mb-6">Lista de clases</h1>
       </Container>
       <Container>
         <Container>

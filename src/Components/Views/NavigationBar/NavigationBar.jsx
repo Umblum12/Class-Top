@@ -123,7 +123,7 @@ const NavigationBar = ({ onLogout }) => {
         </Navbar>
       ) : (
         <div>
-          <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: "#2b245b" }} fixed="top" className="flex-grow-1">
+          <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: "#2b245b", zIndex: "299" }} fixed="top" className="flex-grow-1">
             <Container>
               <Navbar.Brand href="/" className="p-3">
                 <img width="90" height="90" alt="Logo" src={Logo} />
@@ -153,7 +153,7 @@ const NavigationBar = ({ onLogout }) => {
               right: 0,
               top: "auto",
               transition: "transform 1s ease-in-out",
-
+              zIndex: 1999,
             }}>
             <Card style={{
               position: isHiden ? "fixed" : "absolute",
@@ -163,6 +163,7 @@ const NavigationBar = ({ onLogout }) => {
               width: "260px",
               backgroundColor: "#2b245b",
               transition: "transform 1s ease-in-out",
+              
             }}>
               <Card.Body style={{ width: "100%", height: "auto" }} >
                 <div className="">
