@@ -25,6 +25,7 @@ import {
   PlusCircleIcon,
   Bars4Icon,
   ClipboardDocumentCheckIcon,
+  InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 
 const NavigationBar = ({ onLogout }) => {
@@ -166,6 +167,7 @@ const NavigationBar = ({ onLogout }) => {
               
             }}>
               <Card.Body style={{ width: "100%", height: "auto" }} >
+
                 <div className="">
                   {profileUrl && ( // Render profile picture if available
                     <img
@@ -179,6 +181,8 @@ const NavigationBar = ({ onLogout }) => {
                     <span>{loggedInUser}</span>
                   </Typography>
                 </div>
+                
+              <p className="overflow-auto" style={{ overflow: 'scroll', height: '550px' }}>
                 <List>
                   <Link to="/Chats">
                     <ListItem style={{ width: "100%", height: "auto" }}>
@@ -198,12 +202,7 @@ const NavigationBar = ({ onLogout }) => {
                       <span>Lista de favoritos</span>
                     </ListItem>
                   </Link>
-                  <Link to="/CrearClasses">
-                    <ListItem style={{ width: "100%", height: "auto" }}>
-                      <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                      <span>Pon tu clase en ClassTop</span>
-                    </ListItem>
-                  </Link>
+              
                   <Link to="/Panel">
                     <ListItem style={{ width: "100%", height: "auto" }}>
                       <PresentationChartBarIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
@@ -218,8 +217,14 @@ const NavigationBar = ({ onLogout }) => {
                   </Link>
                   <Link to="/CentroDeAyuda">
                     <ListItem style={{ width: "100%", height: "auto" }}>
-                      <UserCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                      <InformationCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
                       <span>Centro de ayuda</span>
+                    </ListItem>
+                  </Link>
+                  <Link to="/CrearClasses">
+                    <ListItem style={{ width: "100%", height: "auto" }}>
+                      <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                      <span>Pon tu clase en ClassTop</span>
                     </ListItem>
                   </Link>
                   {isAdminUser && ( // Render only if user is admin
@@ -244,6 +249,7 @@ const NavigationBar = ({ onLogout }) => {
                     <span>Cerrar sesión</span>
                   </ListItem >
                 </List>
+                </p>
 
               </Card.Body>
             </Card>
@@ -258,7 +264,7 @@ const NavigationBar = ({ onLogout }) => {
         />
 
         {isLoading && (
-          <div className="overlay">
+          <div className="overlay" style={{ position: "fixed" }}>
             <Spinner className="custom-spinner" animation="border" />
           </div>
         )}

@@ -213,43 +213,49 @@ const Cuenta = () => {
 
 
       <Modal show={showUploadModal} onHide={() => setShowUploadModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Subir imagen</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedFile ? (
-            <div>
-              <p>Nombre del archivo: {selectedFile.name}</p>
-              <p>Tipo de archivo: {selectedFile.type}</p>
-              <Button onClick={handleRemoveFile}>Eliminar</Button>
-            </div>
-          ) : (
-            <div
-              onClick={handleClickFileInput}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              style={{
-                border: "2px dashed #ccc",
-                padding: "20px",
-                textAlign: "center",
-                cursor: "pointer",
-              }}
-            >
-              <p>Arrastra y suelta aquí tu imagen</p>
-            </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cerrar
-          </Button>
-          {selectedFile && (
-            <Button variant="primary" onClick={() => handleUpload(selectedFile)}>
-              Subir
-            </Button>
-          )}
-        </Modal.Footer>
-      </Modal>
+  <Modal.Header closeButton>
+    <Modal.Title>Subir imagen</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {selectedFile ? (
+      <div>
+        <img
+          src={URL.createObjectURL(selectedFile)} // Crear una URL del archivo seleccionado para la vista previa
+          alt="Vista previa de la imagen"
+          style={{ maxWidth: "100%", marginBottom: "20px" }}
+        />
+        <p>Nombre del archivo: {selectedFile.name}</p>
+        <p>Tipo de archivo: {selectedFile.type}</p>
+        <Button onClick={handleRemoveFile}>Eliminar</Button>
+      </div>
+    ) : (
+      <div
+        onClick={handleClickFileInput}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        style={{
+          border: "2px dashed #ccc",
+          padding: "20px",
+          textAlign: "center",
+          cursor: "pointer",
+        }}
+      >
+        <p>Arrastra y suelta aquí tu imagen</p>
+      </div>
+    )}
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowModal(false)}>
+      Cerrar
+    </Button>
+    {selectedFile && (
+      <Button variant="primary" onClick={() => handleUpload(selectedFile)}>
+        Subir
+      </Button>
+    )}
+  </Modal.Footer>
+</Modal>
+
 
       <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)} centered>
         <Modal.Header closeButton>

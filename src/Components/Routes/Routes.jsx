@@ -71,9 +71,8 @@ const AppRoutes = () => {
       <Route path="/Categorias" element={<Categorias />} />
       <Route path="/DetailView" element={<DetialView />} />
       <Route path="/VerificacionCorreo/:email" element={<Verification />} />
-
+      <Route path="/AboutUs" element={<AboutUs />} />
       <Route element={<AuthService />}>
-        <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/Panel" element={<Panel />} />
         <Route path="/Cuenta" element={<Cuenta />} />
         <Route path="/Chats" element={<Chats />} />
