@@ -3,13 +3,13 @@ import { Navigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
 import AlertService from './AlertService/AlertService';
 import { getCookie } from '../utils/cookieUtils';
-
+import { API_URL } from '../config';
 const AuthAdmin = ({ redirectPath = '/' }) => {
   const [rol, setRol] = useState('loading');
 
   useEffect(() => {
     const userId = getCookie('userId');
-    axios.get(`https://clon-airbnb-api-programmingsoft.koyeb.app/usuarios/${userId}`)
+    axios.get(`${API_URL}/${userId}`)
       .then(response => {
         const userRol = response.data.Rol;
         setRol(userRol);
