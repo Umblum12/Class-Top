@@ -11,7 +11,7 @@ const CentroDeAyuda = ({ }) => {
       try {
         const response = await axios.get(`${API_URL}/articulo`);
         setData(response.data);
-        console.log(response.data);
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }

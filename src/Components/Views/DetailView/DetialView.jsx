@@ -111,7 +111,7 @@ const DetailView = () => {
             reservation.userid === userId
         );
         setPurchased(wawa);
-        console.log(wawa)
+   
         setIsPurchased(isPurchased);
         // Check if the logged-in user is the creator of the class
         if (product.userId === userId) {
@@ -147,7 +147,7 @@ const DetailView = () => {
     setIsButtonDisabled(true);
     setIsLoading(true);
     try {
-   console.log(product)
+
   
       if (isPurchased) {
         // Logic for cancelling purchase
