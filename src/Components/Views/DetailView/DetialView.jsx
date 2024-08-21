@@ -23,6 +23,7 @@ const DetailView = () => {
   const [product, setProduct] = useState(null);
   const [isFixed, setIsFixed] = useState(false);
   const [isPurchased, setIsPurchased] = useState(null);
+  const [purchasedoption, setPurchased] = useState(null);
   const [user, setUser] = useState(null);
   const [classStatistics, setClassStatistics] = useState(null);
   const navigate = useNavigate();
@@ -104,7 +105,13 @@ const DetailView = () => {
             reservation.listingsid === product._id &&
             reservation.userid === userId
         );
-
+        const wawa = reservationResponse.data.filter(
+          (reservation) =>
+            reservation.listingsid === product._id &&
+            reservation.userid === userId
+        );
+        setPurchased(wawa);
+        console.log(wawa)
         setIsPurchased(isPurchased);
         // Check if the logged-in user is the creator of the class
         if (product.userId === userId) {
@@ -140,31 +147,36 @@ const DetailView = () => {
     setIsButtonDisabled(true);
     setIsLoading(true);
     try {
-   
+   console.log(product)
   
       if (isPurchased) {
         // Logic for cancelling purchase
         const response = await axios.delete(
-          `${API_URL}/reservations/${isPurchased._id}`
+          `${API_URL}/reservations/${purchasedoption[0]._id}`
         );
   
         // Check if cancellation was successful
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           setIsPurchased(null);
           toast.success("Compra cancelada exitosamente");
   
           // Decrement sales count of the class
-          await axios.patch(`${API_URL}/clases/${product._id}/decrement-sales`);
+          await axios.patch(`${API_URL}/clases/${product._id}/cancel-purchase`);
         } else {
           // Handle cancel purchase error
           toast.error("Error al cancelar la compra. Por favor, inténtalo de nuevo más tarde.");
         }
-      } else {
+
+
+
+      } 
+      if(!isPurchased) 
+      {
         // Logic for creating a reservation
         const reservation = {
           listingsid: product._id,
           userid: userId,
-          date: product.date,
+          date: product.dateEnd,
           detail: product.description,
         };
   
@@ -174,13 +186,15 @@ const DetailView = () => {
         );
   
         // Check if reservation was successful
-        if (response.status === 200) {
+        if (response.status === 201) {
           setIsPurchased(true);
           toast.success("¡Asistencia confirmada!");
   
           // Increment sales count of the class
-          await axios.patch(`${API_URL}/clases/${product._id}/increment-sales`);
-        } else {
+          await axios.patch(`${API_URL}/clases/${product._id}/purchase`);
+        } 
+
+        if (response.status === 500 || response.status === 404 ) {
           // Handle reservation error
           toast.error("Error al confirmar la asistencia. Por favor, inténtalo de nuevo más tarde.");
         }
@@ -191,6 +205,7 @@ const DetailView = () => {
       toast.error("Error al confirmar la asistencia o cancelar la compra. Por favor, inténtalo de nuevo más tarde.");
     }
       setIsLoading(false);
+
       setIsButtonDisabled(false);
   };
   
