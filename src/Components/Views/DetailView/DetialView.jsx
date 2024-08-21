@@ -30,6 +30,7 @@ const DetailView = () => {
   const location = useLocation();
   const userId = getCookie("userId");
   const [isLoading, setIsLoading] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   useEffect(() => {
     // Obtiene el producto del estado de ubicación
@@ -136,18 +137,20 @@ const DetailView = () => {
   };
 
   const handleSubmit = async (product) => {
+    setIsButtonDisabled(true);
+    setIsLoading(true);
     try {
-      setIsLoading(true);
+   
   
       if (isPurchased) {
         // Logic for cancelling purchase
         const response = await axios.delete(
-          `${API_URL}/reservations/${userId}/${product._id}`
+          `${API_URL}/reservations/${isPurchased._id}`
         );
   
         // Check if cancellation was successful
         if (response.status === 200) {
-          setIsPurchased(false);
+          setIsPurchased(null);
           toast.success("Compra cancelada exitosamente");
   
           // Decrement sales count of the class
@@ -171,7 +174,7 @@ const DetailView = () => {
         );
   
         // Check if reservation was successful
-        if (response.status === 201) {
+        if (response.status === 200) {
           setIsPurchased(true);
           toast.success("¡Asistencia confirmada!");
   
@@ -186,9 +189,9 @@ const DetailView = () => {
       // Handle reservation or cancel purchase error
       console.error("Error al confirmar la asistencia o cancelar la compra:", error);
       toast.error("Error al confirmar la asistencia o cancelar la compra. Por favor, inténtalo de nuevo más tarde.");
-    } finally {
-      setIsLoading(false);
     }
+      setIsLoading(false);
+      setIsButtonDisabled(false);
   };
   
   
@@ -293,7 +296,7 @@ const DetailView = () => {
             style={{
               position: isFixed ? "fixed" : "absolute",
               right: isFixed ? -15 : -15,
-              top: isFixed ? 500 : "auto",
+              top: isFixed ? 200 : "auto",
               transition: "transform 1s ease-in-out",
             }}
             md={6}

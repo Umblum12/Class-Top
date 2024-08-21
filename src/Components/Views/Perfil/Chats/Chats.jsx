@@ -27,6 +27,7 @@ const Chats = () => {
   const userId = getCookie("userId");
   const token = getCookie("token");
   const [isLoading, setIsLoading] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const getImagePerfil = (remitente) => {
     const usuario = usuarios.find(usuario => usuario._id === remitente);
@@ -161,6 +162,7 @@ const Chats = () => {
 
 
     const enviarMensaje = () => {
+      setIsButtonDisabled(true);
       if (messageContent.trim() === '' || !selectedUser) {
         return;
       }
@@ -176,25 +178,30 @@ const Chats = () => {
         socket.current.emit('mensaje', nuevoMensaje);
       }
       setMessageContent('');
+      setIsButtonDisabled(false);
     };
 
-        useEffect(() => {
-          if (selectedUser) {
-            axios.get(
-              `${API_URL}/chat/chatRoom/${chatRoomId}`
-              )
-              .then(response => {
-                setMessageThread(response.data); // Establecer los mensajes en el estado
-              })
-              .catch(error => {
-                console.error('Error al obtener mensajes:', error);
-              });
-          }
-        }, [selectedUser, chatRoomId]);
+          // Efecto para obtener mensajes del servidor
+  useEffect(() => {
+    if (selectedUser && chatRoomId) {
+      axios.get(`${API_URL}/chat/chatRoom/${chatRoomId}`)
+        .then(response => {
+          setMessageThread(response.data); // Establecer los mensajes en el estado
+        })
+        .catch(error => {
+          console.error('Error al obtener mensajes:', error);
+        });
+    }
+  }, [selectedUser, chatRoomId]); // Dependencias: Ejecutar cuando cambie selectedUser o chatRoomId
 
-        useEffect(() => {
-          scrollMe.current && (scrollMe.current.scrollTop = scrollMe.current.scrollHeight);
-        }, [messageThread]);
+  // Efecto para hacer scroll hacia abajo
+  useEffect(() => {
+    if (scrollMe.current) {
+      scrollMe.current.scrollTop = scrollMe.current.scrollHeight;
+    }
+  }, [messageThread]); // Dependencia: Ejecutar cuando cambie messageThread
+
+
 
   return (
     <div>
@@ -295,7 +302,8 @@ const Chats = () => {
       </Button>
     </div>
     <div className="d-inline-block">
-      <Button color="primary" rounded onClick={enviarMensaje}>
+      <Button color="primary" rounded onClick={enviarMensaje}
+      disabled={isButtonDisabled}>
         Enviar
       </Button>
     </div>
