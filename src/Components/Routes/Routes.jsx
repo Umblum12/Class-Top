@@ -30,37 +30,103 @@ const AppRoutes = () => {
   }, [location]);
 
   const updateBreadcrumbs = () => {
-      // Obtener la ruta actual dividida por "/"
-      const pathSegments = location.pathname.split('/').filter(Boolean);
-      let currentPath = '';
-      const updatedBreadcrumbs = pathSegments.map((segment, index) => {
-          currentPath += `/${segment}`;
-          return (
-              <Breadcrumb.Item 
-                  key={index} 
-                  linkAs={Link} 
-                  linkProps={{ to: currentPath }} 
-                  className="btn btn-outline-secondary" // Aplicar clase btn-outline-info
-                  style={{ margin: "0 5px" }} // Ajustar margen
-              >
-                  {segment}
-              </Breadcrumb.Item>
-          );
-      });
-      // Agregar el breadcrumb "Home" como primer elemento
-      updatedBreadcrumbs.unshift(
-          <Breadcrumb.Item 
-              key="home" 
-              linkAs={Link} 
-              linkProps={{ to: "/" }} 
-              className="btn btn-outline-secondary" // Aplicar clase btn-outline-info
-              style={{ margin: "0 5px" }} // Ajustar margen
-          >
-              Home
-          </Breadcrumb.Item>
-      );
-      setBreadcrumbs(updatedBreadcrumbs);
-  };
+    // Define dynamic route segments
+    const dynamicRoutes = {
+        'articulo/:id': 'Articulo',
+        // Add other dynamic routes if needed
+    };
+
+    // Get current path segments
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+
+    // Check if the path contains 'articulo'
+    const isArticuloPage = pathSegments.includes('articulo');
+
+    let breadcrumbs = [];
+
+    if (isArticuloPage) {
+        // If the path contains 'articulo', only show "Home"
+        breadcrumbs = [
+          
+            <Breadcrumb.Item
+                key="home"
+                linkAs={Link}
+                linkProps={{ to: "/" }}
+                className="btn btn-outline-secondary" // Apply class
+                style={{ margin: "0 5px" }} // Adjust margin
+            >
+                Home
+            </Breadcrumb.Item> ,
+                 <Breadcrumb.Item
+                 key="CentroDeAyuda"
+                 linkAs={Link}
+                 linkProps={{ to: "/CentroDeAyuda" }}
+                 className="btn btn-outline-secondary" // Apply class
+                 style={{ margin: "0 5px" }} // Adjust margin
+             >
+                 CentroDeAyuda
+             </Breadcrumb.Item>
+        ];
+    } else {
+        // Generate breadcrumbs normally
+        let currentPath = '';
+
+        breadcrumbs = pathSegments.map((segment, index) => {
+            currentPath += `/${segment}`;
+
+            // Check if the current segment matches any dynamic route pattern
+            const isDynamicRoute = Object.keys(dynamicRoutes).some(route => {
+                const routeSegments = route.split('/');
+                if (routeSegments.length !== pathSegments.length) return false;
+
+                return routeSegments.every((rSegment, i) =>
+                    rSegment.startsWith(':') || rSegment === pathSegments[i]
+                );
+            });
+
+            const displaySegment = isDynamicRoute ? dynamicRoutes[Object.keys(dynamicRoutes).find(route => {
+                const routeSegments = route.split('/');
+                if (routeSegments.length !== pathSegments.length) return false;
+
+                return routeSegments.every((rSegment, i) =>
+                    rSegment.startsWith(':') || rSegment === pathSegments[i]
+                );
+            })] : segment;
+
+            return (
+                <Breadcrumb.Item
+                    key={index}
+                    linkAs={Link}
+                    linkProps={{ to: currentPath }}
+                    className="btn btn-outline-secondary" // Apply class
+                    style={{ margin: "0 5px" }} // Adjust margin
+                >
+                  
+                    {displaySegment}
+                </Breadcrumb.Item>
+               
+            );
+        });
+
+        // Add the breadcrumb "Home" as the first element
+        breadcrumbs.unshift(
+            <Breadcrumb.Item
+                key="home"
+                linkAs={Link}
+                linkProps={{ to: "/" }}
+                className="btn btn-outline-secondary" // Apply class
+                style={{ margin: "0 5px" }} // Adjust margin
+            >
+                Home
+            </Breadcrumb.Item>
+        );
+    }
+
+    // Update the breadcrumbs state
+    setBreadcrumbs(breadcrumbs);
+};
+
+      
 
 
   return (
