@@ -37,7 +37,7 @@ const NavigationBar = ({ onLogout }) => {
   const navigate = useNavigate();
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [profileUrl, setProfileUrl] = useState(null);
-  const [isHiden, setIsHiden] = useState(false);
+  const [isHiden, setIsHiden] = useState(false); // Estado para la barra lateral
 
   const handleShowLoginModal = () => setShowLoginModal(true);
   const handleCloseLoginModal = () => setShowLoginModal(false);
@@ -48,6 +48,12 @@ const NavigationBar = ({ onLogout }) => {
     if (token) {
       setLoggedInUser(storedUsername);
       setIsAuthenticated(true);
+    }
+
+    // Recupera el estado de la barra lateral desde localStorage
+    const sidebarState = localStorage.getItem('isSidebarHidden');
+    if (sidebarState) {
+      setIsHiden(JSON.parse(sidebarState));
     }
 
   }, []);
@@ -62,7 +68,7 @@ const NavigationBar = ({ onLogout }) => {
         setProfileUrl(response.data.imagePerfil.imageUrl);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        setIsAdminUser(false); // Set to false in case of an error
+        setIsAdminUser(false);
       }
     };
 
@@ -90,7 +96,9 @@ const NavigationBar = ({ onLogout }) => {
   };
 
   const handleClickburgir = () => {
-    setIsHiden(!isHiden);
+    const newIsHiden = !isHiden;
+    setIsHiden(newIsHiden);
+    localStorage.setItem('isSidebarHidden', JSON.stringify(newIsHiden)); // Guarda el estado en localStorage
   };
 
   return (
@@ -137,15 +145,15 @@ const NavigationBar = ({ onLogout }) => {
               </Navbar.Collapse>
             </Container>
             <div style={{ marginRight:"5vw" }}>
-              <SearchMenu   ></SearchMenu>
+              <SearchMenu />
             </div>
 
             <Button
-              className="btn btn-primary "
+              className="btn btn-primary"
               onClick={handleClickburgir}
-              style={{ marginRight:"5vw"}}
+              style={{ marginRight:"5vw" }}
             >
-              <Bars4Icon className="h-5 w-5" style={{ width:"2.5vw"}} />
+              <Bars4Icon className="h-5 w-5" style={{ width:"2.5vw" }} />
             </Button>
           </Navbar>
           <div className="fixed top-0 left-0 h-full w-64 bg-white shadow-md"
@@ -167,14 +175,13 @@ const NavigationBar = ({ onLogout }) => {
               
             }}>
               <Card.Body style={{ width: "100%", height: "auto" }} >
-
                 <div className="">
-                  {profileUrl && ( // Render profile picture if available
+                  {profileUrl && (
                     <img
                       src={profileUrl}
                       alt="Perfil de usuario"
                       className="rounded-circle mb-4 img-fluid"
-                      style={{ marginBottom: '20px', height: '100px', width: '100px'}} // Add bottom margin
+                      style={{ marginBottom: '20px', height: '100px', width: '100px' }}
                     />
                   )}
                   <Typography variant="h5" color="blue-gray" style={{ color: "white" }}>
@@ -182,75 +189,74 @@ const NavigationBar = ({ onLogout }) => {
                   </Typography>
                 </div>
                 
-              <p className="overflow-auto" style={{ overflow: 'scroll', height: '550px' }}>
-                <List>
-                  <Link to="/Chats">
-                    <ListItem style={{ width: "100%", height: "auto" }}>
-                      <ChatBubbleBottomCenterTextIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                      <span> Chat</span>
-                    </ListItem>
-                  </Link>
-                  <Link to="/Clases">
-                    <ListItem style={{ width: "100%", height: "auto" }}>
-                      <ClipboardDocumentCheckIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                      <span>Asistencias</span>
-                    </ListItem>
-                  </Link>
-                  <Link to="/ListasDeFavoritos">
-                    <ListItem style={{ width: "100%", height: "auto" }}>
-                      <HeartIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                      <span>Lista de favoritos</span>
-                    </ListItem>
-                  </Link>
+                <p className="overflow-auto" style={{ overflow: 'scroll', height: '550px' }}>
+                  <List>
+                    <Link to="/Chats">
+                      <ListItem style={{ width: "100%", height: "auto" }}>
+                        <ChatBubbleBottomCenterTextIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                        <span> Chat</span>
+                      </ListItem>
+                    </Link>
+                    <Link to="/Clases">
+                      <ListItem style={{ width: "100%", height: "auto" }}>
+                        <ClipboardDocumentCheckIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                        <span>Asistencias</span>
+                      </ListItem>
+                    </Link>
+                    <Link to="/ListasDeFavoritos">
+                      <ListItem style={{ width: "100%", height: "auto" }}>
+                        <HeartIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                        <span>Lista de favoritos</span>
+                      </ListItem>
+                    </Link>
               
-                  <Link to="/Panel">
-                    <ListItem style={{ width: "100%", height: "auto" }}>
-                      <PresentationChartBarIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                      <span>Panel</span>
-                    </ListItem>
-                  </Link>
-                  <Link to="/Cuenta">
-                    <ListItem style={{ width: "100%", height: "auto" }}>
-                      <UserCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                      <span>Perfil</span>
-                    </ListItem>
-                  </Link>
-                  <Link to="/CentroDeAyuda">
-                    <ListItem style={{ width: "100%", height: "auto" }}>
-                      <InformationCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                      <span>Centro de ayuda</span>
-                    </ListItem>
-                  </Link>
-                  <Link to="/CrearClasses">
-                    <ListItem style={{ width: "100%", height: "auto" }}>
-                      <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                      <span>Pon tu clase en ClassTop</span>
-                    </ListItem>
-                  </Link>
-                  {isAdminUser && ( // Render only if user is admin
-                    <>
-                      <Link to="/CrudAlumnos">
-                        <ListItem style={{ width: "100%", height: "auto" }}>
-                          <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                          <span>Admin. Alumnos</span>
-                        </ListItem>
-                      </Link>
-                      <Link to="/CrudArticulos">
-                        <ListItem style={{ width: "100%", height: "auto" }}>
-                          <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                          <span>Admin. Articulos</span>
-                        </ListItem>
-                      </Link>
-                    </>
-                  )}
+                    <Link to="/Panel">
+                      <ListItem style={{ width: "100%", height: "auto" }}>
+                        <PresentationChartBarIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                        <span>Panel</span>
+                      </ListItem>
+                    </Link>
+                    <Link to="/Cuenta">
+                      <ListItem style={{ width: "100%", height: "auto" }}>
+                        <UserCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                        <span>Perfil</span>
+                      </ListItem>
+                    </Link>
+                    <Link to="/CentroDeAyuda">
+                      <ListItem style={{ width: "100%", height: "auto" }}>
+                        <InformationCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                        <span>Centro de ayuda</span>
+                      </ListItem>
+                    </Link>
+                    <Link to="/CrearClasses">
+                      <ListItem style={{ width: "100%", height: "auto" }}>
+                        <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                        <span>Pon tu clase en ClassTop</span>
+                      </ListItem>
+                    </Link>
+                    {isAdminUser && (
+                      <>
+                        <Link to="/CrudAlumnos">
+                          <ListItem style={{ width: "100%", height: "auto" }}>
+                            <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                            <span>Admin. Alumnos</span>
+                          </ListItem>
+                        </Link>
+                        <Link to="/CrudArticulos">
+                          <ListItem style={{ width: "100%", height: "auto" }}>
+                            <PlusCircleIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                            <span>Admin. Articulos</span>
+                          </ListItem>
+                        </Link>
+                      </>
+                    )}
 
-                  <ListItem style={{ width: "100%", height: "auto", color: "red" }} onClick={handleLogout}>
-                    <PowerIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
-                    <span>Cerrar sesión</span>
-                  </ListItem >
-                </List>
+                    <ListItem style={{ width: "100%", height: "auto", color: "red" }} onClick={handleLogout}>
+                      <PowerIcon className="h-5 w-5" style={{ width: "30%", height: "auto" }} />
+                      <span>Cerrar sesión</span>
+                    </ListItem >
+                  </List>
                 </p>
-
               </Card.Body>
             </Card>
           </div>
